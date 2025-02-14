@@ -1,0 +1,121 @@
+/* TODO */
+/* 
+x outlined text
+x proper states for nav
+x about spacing
+x about content
+- linking behance, etc.
+- transitions
+x merge the 3d scene for the background
+*/
+
+@import url("/css/reset.css");
+
+:root {
+  --font-sans: Inter, sans-serif;
+  --font-mono: Space Mono, monospace;
+
+  --fs-min: 0.875rem;
+  --fs-mid: 1.5rem;
+  --fs-max: max(min(1.25rem + 25svh, 1.25rem + 15svw), 4rem);
+
+  --spacing-min: clamp(0rem, 0.25rem + 2vw, 50rem);
+
+  --foreground-color: light-dark(#121212, #e0e0e0);
+  --foreground-color-dim: #888888;
+  --background-color: light-dark(#e0e0e0, #121212);
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Inter';
+  font-weight: 100 900;
+  src: url('/fonts/Inter-VariableFont_opsz\,wght.ttf') format(truetype);
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Space Mono';
+  font-weight: 400;
+  src: url('/fonts/space-mono-latin-400.woff2') format(truetype);
+}
+
+html {
+  color-scheme: light dark;
+}
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  font: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--foreground-color);
+  font-family: var(--font-sans);
+  font-size: var(--fs-mid);
+  line-height: 1.3;
+}
+
+main {
+  padding: var(--spacing-min);
+}
+
+main:has(details[name="nav"][open]) > details[name="nav"]:not([open]) {
+  display: none;
+}
+
+details[name="nav"] {
+  summary {
+    color: var(--background-color);
+    font-size: var(--fs-max);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 0.8;
+    -webkit-text-stroke: 2px var(--foreground-color);
+    text-transform: uppercase;
+    list-style-type: none;
+    user-select: none;
+  }
+
+  ul {
+    padding: var(--spacing-min);
+    list-style-type: none;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    &:visited {
+      color: var(--foreground-color-dim);
+    }
+    &:hover {
+      color: var(--foreground-color);
+    }
+  }
+
+  &[open] {
+    summary {
+      color: var(--foreground-color-dim);
+      text-shadow: none;
+    }
+  }
+}
+
+@media (hover: hover) {
+  details[name="nav"] {
+    summary:hover {
+      color: var(--foreground-color);
+    }
+    a {
+      &:hover {
+        color: var(--foreground-color);
+        text-decoration: underline;
+      }
+    }
+  }
+}
