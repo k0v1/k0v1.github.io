@@ -1,0 +1,200 @@
+/* TODO */
+/* x rotate sides to match height & width */
+/* - implement depth for individual objects */
+/* - implement z-pos for individual objects */
+/* ! refactor code to match the structure better */
+/* x implement color using oklch from background */
+/* - gradients for sides */
+/* - use sin and cosine with a single input variable to control:
+      - depth
+      - z-pos
+      - hue
+      - rotate-y
+      - rotate-x
+*/
+
+/* INPUT */
+/* ======================================== */
+:root {
+  --orbit-x: 0;
+  --orbit-y: 0;
+}
+
+/* RESET */
+/* ======================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* DEFAULT STYLES */
+/* ======================================== */
+html {
+  color-scheme: dark;
+}
+
+body {
+  align-items: end;
+  background-color: light-dark(white, black);
+  justify-items: end;
+  display: grid;
+  min-height: 100svh;
+}
+
+/* SCENE */
+/* ======================================== */
+#scene {
+  /* Input */
+  --_rotate-y: /* var(--orbit-x) */0.875;
+  --_rotate-x: var(--orbit-y);
+  --_ascender-depth: 0.5em;
+  --_stem-depth: 0.75em;
+  --_arm-depth: 1em;
+  --_leg-depth: 1.25em;
+  --_ascender-pos: -0.125em;
+  --_stem-pos: 0.125em;
+  --_arm-pos: -0.125em;
+  --_leg-pos: 0.125em;
+
+  /* Config */
+  --_unit: min(25vh, 25vw); /* This equals '1em'. */
+  --_scene-height: 100svh;
+  --_scene-width: 100svw;
+
+  --_background-color: light-dark(#e0e0e0e0, #121212);
+  --_foreground-color: light-dark(#757575, #e0e0e0);
+
+  /* Utility */
+  --_center-face: translate(-50%, -50%);
+
+  background-color: var(--_background-color);
+  font-size: var(--_unit);
+  min-height: var(--_scene-height);
+  min-width: var(--_scene-width);
+  position: relative;
+  perspective: 25em;
+  perspective-origin: 50% 50%;
+  overflow: hidden;
+}
+
+#scene * {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+/* LOGO */
+/* ======================================== */
+/* Camera rotation and vertical centering */
+#k0v1 {
+  transform:
+    rotateY(calc(var(--_rotate-y) * 360deg))
+    rotateX(calc(var(--_rotate-x) * 360deg))
+    translateY(-0.22em);
+  transform-style: preserve-3d;
+}
+
+/* Matching coordinate systems */
+.center { transform: var(--_center-face); }
+.center, .center > * { transform-style: preserve-3d; }
+
+/* Wireframe */
+/* .front,
+.side-01,
+.side-02,
+.side-03,
+.side-04 {
+  box-shadow:
+    0 0 0 1px var(--_foreground-color),
+    inset 0 0 0 1px var(--_foreground-color)
+  ;
+} */
+
+/* ASSEMBLY */
+/* ======================================== */
+/* Ascender, arm and stem are the same shapes */
+.front {
+  background-color: var(--_foreground-color);
+  clip-path: polygon(0 0, 100% 100%, 0 100%);
+  width: 1em;
+  height: 1em;
+  transform: var(--_center-face) translateZ(calc(var(--_depth) / 2));
+}
+
+.side-01 {
+  background-color: #ff444488;
+  width: var(--_depth);
+  height: 1em;
+  transform: var(--_center-face) translate(-0.5em, 0) rotateY(-90deg);
+}
+
+.side-02 {
+  background-color: #ff444488;
+  width: var(--_depth);
+  height: 1em;
+  transform: var(--_center-face) translate(0, 0.5em) rotateY(90deg)
+    rotateX(-90deg);
+}
+
+.side-03 {
+  background-color: #ff444488;
+  width: var(--_depth);
+  height: 1.414em;
+  transform: var(--_center-face) rotateZ(45deg) rotateY(90deg) rotateX(-90deg);
+}
+
+#ascender {
+  --_depth: var(--_ascender-depth);
+
+  transform: translate(-0.707em, -0.707em) rotateZ(45deg) translateZ(var(--_ascender-pos));
+}
+
+#arm {
+  --_depth: var(--_arm-depth);
+
+  transform: rotateZ(-45deg) translateZ(var(--_arm-pos));
+}
+
+#stem {
+  --_depth: var(--_stem-depth);
+
+  transform: translate(-1.15em, 1.15em) rotateZ(-135deg) translateZ(var(--_stem-pos));
+}
+
+#leg {
+  --_depth: var(--_leg-depth);
+
+  transform: translate(0, calc(1.125 * 1.414em)) scale3d(125%, 125%, 100%)
+    rotateZ(135deg) translateZ(var(--_leg-pos));
+
+  .front {
+    background-color: var(--_foreground-color);
+    clip-path: polygon(0 0, 50% 50%, 50% 100%, 0 100%);
+    width: 1em;
+    height: 1em;
+    transform: var(--_center-face) translateZ(calc(var(--_depth) / 2));
+  }
+
+  .side-03 {
+    height: 0.707em;
+    transform: var(--_center-face) rotateZ(45deg) translate(-0.355em, 0)
+      rotateY(90deg) rotateX(-90deg);
+  }
+
+  .side-02 {
+    height: calc(0.5em);
+    transform: var(--_center-face) translate(-0.25em, 0.5em) rotateY(90deg)
+      rotateX(-90deg);
+  }
+
+  .side-04 {
+    background-color: #ff444488;
+    height: calc(0.5em);
+    width: var(--_depth);
+
+    transform: var(--_center-face) translate(0, 0.25em) rotateY(90deg);
+  }
+}
