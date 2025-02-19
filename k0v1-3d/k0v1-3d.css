@@ -1,11 +1,11 @@
 /* TODO */
 /* x rotate sides to match height & width */
-/* - implement depth for individual objects */
-/* - implement z-pos for individual objects */
+/* x implement depth for individual objects */
+/* x implement z-pos for individual objects */
 /* ! refactor code to match the structure better */
 /* x implement color using oklch from background */
-/* - gradients for sides */
-/* - use sin and cosine with a single input variable to control:
+/* x gradients for sides */
+/* x use sin and cosine with a single input variable to control:
       - depth
       - z-pos
       - hue
@@ -16,8 +16,9 @@
 /* INPUT */
 /* ======================================== */
 :root {
-  --orbit-x: 0;
+  --orbit-x: 0.875;
   --orbit-y: 0;
+  --depth-mod: 0;
 }
 
 /* RESET */
@@ -48,24 +49,27 @@ body {
 /* ======================================== */
 #scene {
   /* Input */
-  --_rotate-y: /* var(--orbit-x) */0.875;
+  --_rotate-y: var(--orbit-x);
   --_rotate-x: var(--orbit-y);
-  --_ascender-depth: 0.5em;
-  --_stem-depth: 0.75em;
-  --_arm-depth: 1em;
-  --_leg-depth: 1.25em;
-  --_ascender-pos: -0.125em;
-  --_stem-pos: 0.125em;
-  --_arm-pos: -0.125em;
-  --_leg-pos: 0.125em;
+  --_ascender-depth: calc(0.75em + sin(-1 * 360deg * var(--depth-mod)) * cos(180deg * 2 * (var(--depth-mod) + 0.25)) * 0.5em);
+  --_stem-depth: calc(0.75em + sin(-1 * 360deg * var(--depth-mod)) * sin(360deg * 2 * (var(--depth-mod) + 0.25)) * 0.5em);
+  --_arm-depth: calc(0.75em + sin(360deg * 2 * (var(--depth-mod) + 0.25)) * 0.5em);
+  --_leg-depth: calc(0.75em + cos(180deg * 2 * (var(--depth-mod) + 0.25)) * 0.5em);
+  /* --_ascender-pos: calc(sin(360deg * 2 * (var(--depth-mod) + 0.25)) * 0.25em); */
+  --_ascender-pos: 0em;
+  --_stem-pos: 0em;
+  --_arm-pos: 0em;
+  --_leg-pos: 0em;
 
   /* Config */
-  --_unit: min(25vh, 25vw); /* This equals '1em'. */
+  --_unit: min(35vh, 35vw); /* This equals '1em'. */
   --_scene-height: 100svh;
   --_scene-width: 100svw;
 
   --_background-color: light-dark(#e0e0e0e0, #121212);
   --_foreground-color: light-dark(#757575, #e0e0e0);
+
+  --_sides-gradient: linear-gradient(90deg, hsl(from var(--_foreground-color) h s l / 0.5), 25%, hsl(from var(--_background-color) h s l / 0));
 
   /* Utility */
   --_center-face: translate(-50%, -50%);
@@ -75,9 +79,10 @@ body {
   min-height: var(--_scene-height);
   min-width: var(--_scene-width);
   position: relative;
-  perspective: 25em;
+  perspective: 5em;
   perspective-origin: 50% 50%;
   overflow: hidden;
+  z-index: -1;
 }
 
 #scene * {
@@ -101,18 +106,6 @@ body {
 .center { transform: var(--_center-face); }
 .center, .center > * { transform-style: preserve-3d; }
 
-/* Wireframe */
-/* .front,
-.side-01,
-.side-02,
-.side-03,
-.side-04 {
-  box-shadow:
-    0 0 0 1px var(--_foreground-color),
-    inset 0 0 0 1px var(--_foreground-color)
-  ;
-} */
-
 /* ASSEMBLY */
 /* ======================================== */
 /* Ascender, arm and stem are the same shapes */
@@ -125,14 +118,14 @@ body {
 }
 
 .side-01 {
-  background-color: #ff444488;
+  background: var(--_sides-gradient);
   width: var(--_depth);
   height: 1em;
-  transform: var(--_center-face) translate(-0.5em, 0) rotateY(-90deg);
+  transform: var(--_center-face) translate(-0.5em, 0) rotateY(-90deg) rotateZ(180deg);
 }
 
 .side-02 {
-  background-color: #ff444488;
+  background: var(--_sides-gradient);
   width: var(--_depth);
   height: 1em;
   transform: var(--_center-face) translate(0, 0.5em) rotateY(90deg)
@@ -140,10 +133,10 @@ body {
 }
 
 .side-03 {
-  background-color: #ff444488;
+  background: var(--_sides-gradient);
   width: var(--_depth);
   height: 1.414em;
-  transform: var(--_center-face) rotateZ(45deg) rotateY(90deg) rotateX(-90deg);
+  transform: var(--_center-face) rotateZ(45deg) rotateY(90deg) rotateX(90deg);
 }
 
 #ascender {
@@ -171,17 +164,11 @@ body {
     rotateZ(135deg) translateZ(var(--_leg-pos));
 
   .front {
-    background-color: var(--_foreground-color);
+    /* background-color: var(--_foreground-color); */
     clip-path: polygon(0 0, 50% 50%, 50% 100%, 0 100%);
     width: 1em;
     height: 1em;
     transform: var(--_center-face) translateZ(calc(var(--_depth) / 2));
-  }
-
-  .side-03 {
-    height: 0.707em;
-    transform: var(--_center-face) rotateZ(45deg) translate(-0.355em, 0)
-      rotateY(90deg) rotateX(-90deg);
   }
 
   .side-02 {
@@ -190,8 +177,14 @@ body {
       rotateX(-90deg);
   }
 
+  .side-03 {
+    height: 0.707em;
+    transform: var(--_center-face) rotateZ(45deg) translate(-0.355em, 0)
+      rotateY(90deg) rotateX(90deg);
+  }
+
   .side-04 {
-    background-color: #ff444488;
+    background: var(--_sides-gradient);
     height: calc(0.5em);
     width: var(--_depth);
 

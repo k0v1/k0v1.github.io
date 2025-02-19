@@ -66,6 +66,10 @@ class MorphUI extends HTMLElement {
           Orbit-Y:
           <input name="orbit-y" is="attached-to-prop" prop="--orbit-y" type="range" min="0" max="1" step="0.001">
         </label>
+        <label for="depth-mod">
+          Depth-mod:
+          <input name="depth-mod" is="attached-to-prop" prop="--depth-mod" type="range" min="0" max="1" step="0.001">
+        </label>
       </article>
 
   `;
