@@ -14,7 +14,7 @@ x change Inter to Archivo
 - max font size too big for mobile
 X transition glitch at 'art'
 - general cleanup and comments pls
-- header skews the composition on 'about'
+X header skews the composition on 'about'
 - chrome for ubuntu renders 3d sluggish af compared to firefox (O_O)
 - need dedicated close button inside every 'details'
 */
@@ -29,65 +29,16 @@ X transition glitch at 'art'
 /* # Background props for transitions */
 /* ========================================================================== */
 
-@property --orbit-x {
-  initial-value: 0.125;
-  inherits: false;
-  syntax: '<number>';
-}
-
-@property --orbit-y {
-  initial-value: 0;
-  inherits: false;
-  syntax: '<number>';
-}
-
-@property --pan-y {
-  initial-value: 0;
-  inherits: false;
-  syntax: '<number>';
-}
-
-@property --zoom {
-  initial-value: 1;
-  inherits: false;
-  syntax: '<number>';
-}
-
-@property --perspective {
-  initial-value: 0.25;
-  inherits: false;
-  syntax: '<number>';
-}
-
-@property --depth-mod {
-  initial-value: 0;
-  inherits: false;
-  syntax: '<number>';
-}
-
-@property --ascender-pos {
-  initial-value: 0;
-  inherits: false;
-  syntax: '<number>';
-}
-
-@property --stem-pos {
-  initial-value: 0;
-  inherits: false;
-  syntax: '<number>';
-}
-
-@property --arm-pos {
-  initial-value: 0;
-  inherits: false;
-  syntax: '<number>';
-}
-
-@property --leg-pos {
-  initial-value: 0;
-  inherits: false;
-  syntax: '<number>';
-}
+@property --orbit-x { initial-value: 0.125; inherits: false; syntax: '<number>'; }
+@property --orbit-y { initial-value: 0; inherits: false; syntax: '<number>'; }
+@property --pan-y { initial-value: 0; inherits: false; syntax: '<number>'; }
+@property --zoom { initial-value: 1; inherits: false; syntax: '<number>'; }
+@property --perspective { initial-value: 0.25; inherits: false; syntax: '<number>'; }
+@property --depth-mod { initial-value: 0; inherits: false; syntax: '<number>'; }
+@property --ascender-pos { initial-value: 0; inherits: false; syntax: '<number>'; }
+@property --stem-pos { initial-value: 0; inherits: false; syntax: '<number>'; }
+@property --arm-pos { initial-value: 0; inherits: false; syntax: '<number>'; }
+@property --leg-pos { initial-value: 0; inherits: false; syntax: '<number>'; }
 
 /* ========================================================================== */
 /* # Config */
@@ -103,8 +54,25 @@ X transition glitch at 'art'
 
   --spacing-min: clamp(0rem, 0.25rem + 2vw, 50rem);
 
-  --foreground-color: light-dark(#121212, #e0e0e0);
-  --background-color: light-dark(#e0e0e0, #121212);
+  --foreground-color: light-dark(#9E9E9E, #bdbdbd);
+  --background-color: light-dark(#e0e0e0, #212121);
+  --text-color: light-dark(#121212, #fafafa);
+  --accent-color: var(--text-color);
+
+  --orientation-duration: 0.75s;
+  --depth-mod-duration: 1.25s;
+  --zoom-duration: 1s;
+
+/*   --orbit-x: 0;
+  --orbit-y: 0;
+  --pan-y: 0;
+  --zoom: 0.5;
+  --perspective: 1;
+  --depth-mod: 0;
+  --ascender-pos: 0;
+  --stem-pos: 0;
+  --arm-pos: 0;
+  --leg-pos: 0; */
 }
 
 /* ========================================================================== */
@@ -147,7 +115,7 @@ html {
 
 body {
   background-color: var(--background-color);
-  color: var(--_foreground-color);
+  color: var(--text-color);
   display: grid;
   font-family: var(--font-sans);
   font-size: var(--fs-mid);
@@ -166,6 +134,8 @@ main:has(details[name="nav"][open]) > details[name="nav"]:not([open]) {
 }
 
 details[name="nav"] {
+  --_stroke-width: 2px;
+
   summary {
     color: transparent;
     font-size: var(--fs-max);
@@ -173,15 +143,13 @@ details[name="nav"] {
     font-variation-settings: "wdth" 125;
     letter-spacing: -0.05em;
     line-height: 0.8;
-    mix-blend-mode: difference;
-    -webkit-text-stroke: 2px var(--foreground-color);
+    -webkit-text-stroke: var(--_stroke-width) var(--accent-color);
     text-transform: uppercase;
     list-style-type: none;
     user-select: none;
   }
 
   ul {
-    mix-blend-mode: difference;
     list-style-type: none;
     padding: var(--spacing-min);
   }
@@ -194,13 +162,6 @@ details[name="nav"] {
     }
     &:hover {
       color: var(--foreground-color);
-    }
-  }
-
-  &[open] {
-    summary {
-      color: var(--foreground-color);
-      text-shadow: none;
     }
   }
 }
@@ -269,21 +230,20 @@ body:has(details[name="nav"][id="about"][open]) #scene {
   --_arm-pos: calc(1em * var(--arm-pos));
   --_leg-pos: calc(1em * var(--leg-pos));
 
-  --_orbit-duration: 0.75s;
-  --_depth-mod-duration: 1.25s;
-  --_zoom-duration: 1s;
-
 /* ## Config
 /* ========================================================================== */
   --_unit: min(35vh, 35vw); /* This equals '1em'. */
   --_scene-height: 100svh;
   --_scene-width: 100svw;
 
-  --_background-color: light-dark(#e0e0e0e0, #121212);
-  --_foreground-color: light-dark(#757575, #e0e0e0);
+  --_background-color: var(--background-color);
+  --_foreground-color: var(--foreground-color);
 
-  --_front-color: hsl(from var(--_foreground-color) h s l / 1);
-  --_sides-gradient: linear-gradient(90deg, hsl(from var(--_foreground-color) h s l / 0.5), 25%, hsl(from var(--_background-color) h s l / 0));
+  --_front-color: hsl(from var(--_foreground-color) h s l / 0.75);
+  --_sides-gradient-100: linear-gradient(90deg, hsl(from var(--_foreground-color) h s l / 0.250), 25%, hsl(from var(--_background-color) h s l / 0));
+  --_sides-gradient-200: linear-gradient(90deg, hsl(from var(--_foreground-color) h s l / 0.375), 25%, hsl(from var(--_background-color) h s l / 0));
+  --_sides-gradient-300: linear-gradient(90deg, hsl(from var(--_foreground-color) h s l / 0.500), 25%, hsl(from var(--_background-color) h s l / 0));
+  --_sides-gradient-400: linear-gradient(90deg, hsl(from var(--_foreground-color) h s l / 0.625), 25%, hsl(from var(--_background-color) h s l / 0));
 
 /* ## Utility
 /* ========================================================================== */
@@ -302,16 +262,16 @@ body:has(details[name="nav"][id="about"][open]) #scene {
   perspective-origin: 50% 50%;
   position: relative;
   transition:
-  --orbit-x var(--_orbit-duration) ease,
-  --orbit-y var(--_orbit-duration) ease,
-  --pan-y var(--_orbit-duration) ease,
-  --zoom var(--_zoom-duration) ease,
-  --perspective var(--_zoom-duration) ease,
-  --depth-mod var(--_depth-mod-duration) ease,
-  --ascender-pos var(--_depth-mod-duration) ease,
-  --stem-pos var(--_depth-mod-duration) ease,
-  --arm-pos var(--_depth-mod-duration) ease,
-  --leg-pos var(--_depth-mod-duration) ease
+  --orbit-x var(--orientation-duration) ease,
+  --orbit-y var(--orientation-duration) ease,
+  --pan-y var(--orientation-duration) ease,
+  --zoom var(--zoom-duration) ease,
+  --perspective var(--zoom-duration) ease,
+  --depth-mod var(--depth-mod-duration) ease,
+  --ascender-pos var(--depth-mod-duration) ease,
+  --stem-pos var(--depth-mod-duration) ease,
+  --arm-pos var(--depth-mod-duration) ease,
+  --leg-pos var(--depth-mod-duration) ease
 ;
   z-index: -1;
 }
@@ -355,14 +315,12 @@ body:has(details[name="nav"][id="about"][open]) #scene {
 }
 
 .side-01 {
-  background: var(--_sides-gradient);
   width: var(--_depth);
   height: 1em;
   transform: var(--_center-face) translate(-0.5em, 0) rotateY(-90deg) rotateZ(180deg);
 }
 
 .side-02 {
-  background: var(--_sides-gradient);
   width: var(--_depth);
   height: 1em;
   transform: var(--_center-face) translate(0, 0.5em) rotateY(90deg)
@@ -370,7 +328,6 @@ body:has(details[name="nav"][id="about"][open]) #scene {
 }
 
 .side-03 {
-  background: var(--_sides-gradient);
   width: var(--_depth);
   height: 1.414em;
   transform: var(--_center-face) rotateZ(45deg) rotateY(90deg) rotateX(90deg);
@@ -380,18 +337,30 @@ body:has(details[name="nav"][id="about"][open]) #scene {
   --_depth: var(--_ascender-depth);
 
   transform: translate(-0.707em, -0.707em) rotateZ(45deg) translateZ(var(--_ascender-pos));
+
+  .side-01 { background: var(--_sides-gradient-100); }
+  .side-02 { background: var(--_sides-gradient-300); }
+  .side-03 { background: var(--_sides-gradient-200); }
 }
 
 #arm {
   --_depth: var(--_arm-depth);
 
   transform: rotateZ(-45deg) translateZ(var(--_arm-pos));
+
+  .side-01 { background: var(--_sides-gradient-300); }
+  .side-02 { background: var(--_sides-gradient-200); }
+  .side-03 { background: var(--_sides-gradient-100); }
 }
 
 #stem {
   --_depth: var(--_stem-depth);
 
   transform: translate(-1.15em, 1.15em) rotateZ(-135deg) translateZ(var(--_stem-pos));
+
+  .side-01 { background: var(--_sides-gradient-300); }
+  .side-02 { background: var(--_sides-gradient-100); }
+  .side-03 { background: var(--_sides-gradient-200); }
 }
 
 #leg {
@@ -401,27 +370,32 @@ body:has(details[name="nav"][id="about"][open]) #scene {
     rotateZ(135deg) translateZ(var(--_leg-pos));
 
   .front {
-    /* background-color: var(--_foreground-color); */
     clip-path: polygon(0 0, 50% 50%, 50% 100%, 0 100%);
     width: 1em;
     height: 1em;
     transform: var(--_center-face) translateZ(calc(var(--_depth) / 2));
   }
 
+  .side-01 {
+    background: var(--_sides-gradient-100);
+  }
+
   .side-02 {
+    background: var(--_sides-gradient-200);
     height: calc(0.5em);
     transform: var(--_center-face) translate(-0.25em, 0.5em) rotateY(90deg)
       rotateX(-90deg);
   }
 
   .side-03 {
+    background: var(--_sides-gradient-400);
     height: 0.707em;
     transform: var(--_center-face) rotateZ(45deg) translate(-0.355em, 0)
       rotateY(90deg) rotateX(90deg);
   }
 
   .side-04 {
-    background: var(--_sides-gradient);
+    background: var(--_sides-gradient-300);
     height: calc(0.5em);
     width: var(--_depth);
 
@@ -436,18 +410,19 @@ body:has(details[name="nav"][id="about"][open]) #scene {
 @media (hover: hover) {
   details[name="nav"] {
     summary:hover {
-      color: var(--foreground-color);
-    }
-    &[open] {
-      summary:hover {
-        color: var(--background-color);
-      }
+      color: var(--accent-color);
     }
     a {
       &:hover {
-        color: var(--foreground-color);
+        color: var(--accent-color);
         text-decoration: underline;
       }
     }
+  }
+}
+
+@media (max-width: 720px) {
+  details[name="nav"] {
+    --_stroke-width: 1px;
   }
 }

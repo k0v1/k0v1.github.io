@@ -19,6 +19,7 @@ class MorphUI extends HTMLElement {
       height: 100svh;
       justify-content: center;
       left: 0;
+      pointer-events: none;
       position: fixed;
       top: 0;
       width: 100vw;;
@@ -44,6 +45,7 @@ class MorphUI extends HTMLElement {
       display: grid;
       gap: 0.75em;
       padding: 1.5em;
+      pointer-events: all;
       user-select: none;
       margin-bottom: 2em;
       width: 360px; 
