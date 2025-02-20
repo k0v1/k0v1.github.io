@@ -5,18 +5,25 @@ x proper states for nav
 x about spacing
 x about content
 - linking behance, etc.
-- transitions
+X transitions
 x merge the 3d scene for the background
 x create infinite animations of orbit-x and depth-mod (@property)
 x animate usin :has()
 x text color should be the inverse of the background content
 x change Inter to Archivo
-- max font size too big for mobile
+X max font size too big for mobile
 X transition glitch at 'art'
-- general cleanup and comments pls
+! general cleanup and comments pls
 X header skews the composition on 'about'
 - chrome for ubuntu renders 3d sluggish af compared to firefox (O_O)
-- need dedicated close button inside every 'details'
+X need dedicated close button inside every 'details'
+- adjust font-sizes
+- create consistent spacing
+- block margin on the open detail?
+- fill on the open detail's summary?
+- anyways, something's off with the hierarchy there
+- transition timing system
+- optimize, optimize, optimize
 */
 
 /* ========================================================================== */
@@ -50,14 +57,14 @@ X header skews the composition on 'about'
 
   --fs-min: 0.875rem;
   --fs-mid: 1.5rem;
-  --fs-max: max(min(1.25rem + 22.5svh, 1.25rem + 12.5svw), 4rem);
+  --fs-max: max(min(1.25rem + 20svh, 1.25rem + 10svw), 3rem);
 
   --spacing-min: clamp(0rem, 0.25rem + 2vw, 50rem);
 
-  --foreground-color: light-dark(#9E9E9E, #bdbdbd);
-  --background-color: light-dark(#e0e0e0, #212121);
-  --text-color: light-dark(#121212, #fafafa);
-  --accent-color: var(--text-color);
+  --color-foreground: light-dark(#9E9E9E, #bdbdbd);
+  --color-background: light-dark(#e0e0e0, #212121);
+  --color-text: light-dark(#121212, #fafafa);
+  --color-accent: var(--color-text);
 
   --orientation-duration: 0.75s;
   --depth-mod-duration: 1.25s;
@@ -102,6 +109,8 @@ X header skews the composition on 'about'
 
 html {
   color-scheme: light dark;
+  interpolate-size: allow-keywords;
+  transition-behavior: allow-discrete;
 }
 
 *,
@@ -114,8 +123,8 @@ html {
 }
 
 body {
-  background-color: var(--background-color);
-  color: var(--text-color);
+  background-color: var(--color-background);
+  color: var(--color-text);
   display: grid;
   font-family: var(--font-sans);
   font-size: var(--fs-mid);
@@ -125,31 +134,119 @@ body {
 }
 
 main {
+  backdrop-filter: blur(32px);
   grid-area: a;
   padding: var(--spacing-min);
+  position: relative;
+  transition: backdrop-filter 0.75s ease-out;
 }
 
-main:has(details[name="nav"][open]) > details[name="nav"]:not([open]) {
-  display: none;
+main:has(details[name="nav"][open]) {
+  backdrop-filter: blur(0px);
+  & > details[name="nav"]:not([open]) {
+/*     display: none; */
+    /* opacity: 0; */
+  }
+}
+
+details[name="nav"]::details-content {
+  block-size: 0;
+  overflow-y: hidden;
+  transition: all 0.25s ease-out;
+  transition-behavior: allow-discrete;
+}
+
+details[name="nav"][open]::details-content {
+  block-size: auto;
+  transition: all 0.25s ease-out;
+}
+
+details[name="nav"][open] {
+/*   transition: */
+/*   display 0.25s ease-out, */
+/*   opacity 0.25s ease */
+/*   top 0.5s ease-in */
+/*   ; */
+/*   transition-behavior: allow-discrete; */
 }
 
 details[name="nav"] {
   --_stroke-width: 2px;
 
+  /* opacity: 1; */
+/*   position: absolute; */
+  transition:
+/*     display 0.25s ease-out, */
+    opacity 0.25s ease
+/*     top 0.15s ease-out */
+  ;
+/*   transition-behavior: allow-discrete; */
+
+/*   &#design { top: calc(2rem + 0 * var(--fs-max)); }
+  &#music { top: calc(2rem + 1 * var(--fs-max)); }
+  &#art { top: calc(2rem + 2 * var(--fs-max)); }
+  &#about { top: calc(2rem + 3 * var(--fs-max)); } */
+
+/*   &[open]&#design { top: 2rem; }
+  &[open]&#music { top: 2rem; }
+  &[open]&#art { top: 2rem; }
+  &[open]&#about { top: 2rem; } */
+
   summary {
+    align-items: center;
     color: transparent;
+    cursor: pointer;
+    display: flex;
     font-size: var(--fs-max);
     font-weight: 900;
     font-variation-settings: "wdth" 125;
+    gap: 1rem;
+    justify-content: space-between;
     letter-spacing: -0.05em;
     line-height: 0.8;
-    -webkit-text-stroke: var(--_stroke-width) var(--accent-color);
-    text-transform: uppercase;
     list-style-type: none;
+    text-transform: uppercase;
+    /* transition: color 0.125s ease-in; */
     user-select: none;
+    -webkit-text-stroke: var(--_stroke-width) var(--color-accent);
+  }
+
+  summary::after {
+    --_icon-stroke-width: var(--_stroke-width);
+    --_icon-size: calc(var(--fs-max) / pow(1.618, 4));
+    --_icon-color: var(--color-text);
+    
+    --_icon-point-coordinate-sm: calc(50% - 0.5 * var(--_icon-stroke-width));
+    --_icon-point-coordinate-lg: calc(var(--_icon-point-coordinate-sm) + var(--_icon-stroke-width));
+    
+    background-color: var(--_icon-color);
+    clip-path: polygon(var(--_icon-point-coordinate-sm) 0%, var(--_icon-point-coordinate-lg) 0%, var(--_icon-point-coordinate-lg) var(--_icon-point-coordinate-sm), 100% var(--_icon-point-coordinate-sm), 100% var(--_icon-point-coordinate-lg), var(--_icon-point-coordinate-lg) var(--_icon-point-coordinate-lg), var(--_icon-point-coordinate-lg) 100%, var(--_icon-point-coordinate-sm) 100%, var(--_icon-point-coordinate-sm) var(--_icon-point-coordinate-lg), 0% var(--_icon-point-coordinate-lg), 0% var(--_icon-point-coordinate-sm), var(--_icon-point-coordinate-sm) var(--_icon-point-coordinate-sm));
+    content: '';
+    display: block;
+    height: var(--_icon-size);
+    transition:
+      clip-path 0.25s ease-out,
+      margin-right 0.125s ease-in
+    ;
+    width: var(--_icon-size);
+    z-index: 1;
+  }
+
+  &[open] > summary::after {
+    --_icon-color: var(--color-accent);
+    
+    clip-path: polygon(var(--_icon-point-coordinate-sm) var(--_icon-point-coordinate-sm), var(--_icon-point-coordinate-lg) var(--_icon-point-coordinate-sm), var(--_icon-point-coordinate-lg) var(--_icon-point-coordinate-sm), 100% var(--_icon-point-coordinate-sm), 100% var(--_icon-point-coordinate-lg), var(--_icon-point-coordinate-lg) var(--_icon-point-coordinate-lg), var(--_icon-point-coordinate-lg) var(--_icon-point-coordinate-lg), var(--_icon-point-coordinate-sm) var(--_icon-point-coordinate-lg), var(--_icon-point-coordinate-sm) var(--_icon-point-coordinate-lg), 0% var(--_icon-point-coordinate-lg), 0% var(--_icon-point-coordinate-sm), var(--_icon-point-coordinate-sm) var(--_icon-point-coordinate-sm));
+    transform: rotate(180deg);
+    transform-origin: center;
+    transition:
+      all 0.25s ease-in,
+      margin-right 0.125s ease-in
+    ;
   }
 
   ul {
+    display: flex;
+    gap: 1rem;
     list-style-type: none;
     padding: var(--spacing-min);
   }
@@ -161,7 +258,7 @@ details[name="nav"] {
       color: inherit;
     }
     &:hover {
-      color: var(--foreground-color);
+      color: var(--color-foreground);
     }
   }
 }
@@ -236,8 +333,8 @@ body:has(details[name="nav"][id="about"][open]) #scene {
   --_scene-height: 100svh;
   --_scene-width: 100svw;
 
-  --_background-color: var(--background-color);
-  --_foreground-color: var(--foreground-color);
+  --_background-color: var(--color-background);
+  --_foreground-color: var(--color-foreground);
 
   --_front-color: hsl(from var(--_foreground-color) h s l / 0.75);
   --_sides-gradient-100: linear-gradient(90deg, hsl(from var(--_foreground-color) h s l / 0.250), 25%, hsl(from var(--_background-color) h s l / 0));
@@ -410,11 +507,14 @@ body:has(details[name="nav"][id="about"][open]) #scene {
 @media (hover: hover) {
   details[name="nav"] {
     summary:hover {
-      color: var(--accent-color);
+      color: var(--color-accent);
+    }
+    summary:hover::after {
+      margin-right: 1rem;
     }
     a {
       &:hover {
-        color: var(--accent-color);
+        color: var(--color-accent);
         text-decoration: underline;
       }
     }
