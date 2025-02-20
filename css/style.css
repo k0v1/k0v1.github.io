@@ -23,6 +23,7 @@ X need dedicated close button inside every 'details'
 - fill on the open detail's summary?
 - anyways, something's off with the hierarchy there
 - transition timing system
+- polish the transitions of the '+' icons to match the color transitions of the text
 - optimize, optimize, optimize
 */
 
@@ -206,6 +207,7 @@ details[name="nav"] {
     line-height: 0.8;
     list-style-type: none;
     text-transform: uppercase;
+    transition: color 0.5s ease-out;
     /* transition: color 0.125s ease-in; */
     user-select: none;
     -webkit-text-stroke: var(--_stroke-width) var(--color-accent);
@@ -508,6 +510,7 @@ body:has(details[name="nav"][id="about"][open]) #scene {
   details[name="nav"] {
     summary:hover {
       color: var(--color-accent);
+      transition: color 0s ease-out;
     }
     summary:hover::after {
       margin-right: 1rem;
