@@ -7,34 +7,122 @@ x about content
 - linking behance, etc.
 - transitions
 x merge the 3d scene for the background
-- create infinite animations of orbit-x and depth-mod (@property)
-- animate usin :matches()
-- text color should be the inverse of the background content
-- change Inter to Archivo
+x create infinite animations of orbit-x and depth-mod (@property)
+x animate usin :has()
+x text color should be the inverse of the background content
+x change Inter to Archivo
+- max font size too big for mobile
+X transition glitch at 'art'
+- general cleanup and comments pls
+- header skews the composition on 'about'
+- chrome for ubuntu renders 3d sluggish af compared to firefox (O_O)
+- need dedicated close button inside every 'details'
 */
+
+/* ========================================================================== */
+/* # Reset */
+/* ========================================================================== */
 
 @import url("/css/reset.css");
 
+/* ========================================================================== */
+/* # Background props for transitions */
+/* ========================================================================== */
+
+@property --orbit-x {
+  initial-value: 0.125;
+  inherits: false;
+  syntax: '<number>';
+}
+
+@property --orbit-y {
+  initial-value: 0;
+  inherits: false;
+  syntax: '<number>';
+}
+
+@property --pan-y {
+  initial-value: 0;
+  inherits: false;
+  syntax: '<number>';
+}
+
+@property --zoom {
+  initial-value: 1;
+  inherits: false;
+  syntax: '<number>';
+}
+
+@property --perspective {
+  initial-value: 0.25;
+  inherits: false;
+  syntax: '<number>';
+}
+
+@property --depth-mod {
+  initial-value: 0;
+  inherits: false;
+  syntax: '<number>';
+}
+
+@property --ascender-pos {
+  initial-value: 0;
+  inherits: false;
+  syntax: '<number>';
+}
+
+@property --stem-pos {
+  initial-value: 0;
+  inherits: false;
+  syntax: '<number>';
+}
+
+@property --arm-pos {
+  initial-value: 0;
+  inherits: false;
+  syntax: '<number>';
+}
+
+@property --leg-pos {
+  initial-value: 0;
+  inherits: false;
+  syntax: '<number>';
+}
+
+/* ========================================================================== */
+/* # Config */
+/* ========================================================================== */
+
 :root {
-  --font-sans: Inter, sans-serif;
+  --font-sans: Archivo, sans-serif;
   --font-mono: Space Mono, monospace;
 
   --fs-min: 0.875rem;
   --fs-mid: 1.5rem;
-  --fs-max: max(min(1.25rem + 25svh, 1.25rem + 15svw), 4rem);
+  --fs-max: max(min(1.25rem + 22.5svh, 1.25rem + 12.5svw), 4rem);
 
   --spacing-min: clamp(0rem, 0.25rem + 2vw, 50rem);
 
   --foreground-color: light-dark(#121212, #e0e0e0);
-  --foreground-color-dim: #888888;
   --background-color: light-dark(#e0e0e0, #121212);
 }
+
+/* ========================================================================== */
+/* # General styles */
+/* ========================================================================== */
 
 @font-face {
   font-display: swap;
   font-family: 'Inter';
   font-weight: 100 900;
   src: url('/fonts/Inter-VariableFont_opsz\,wght.ttf') format(truetype);
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Archivo';
+  font-weight: 100 900;
+  src: url('/fonts/Archivo-VariableFont_wdth\,wght.ttf') format(truetype);
 }
 
 @font-face {
@@ -59,7 +147,7 @@ html {
 
 body {
   background-color: var(--background-color);
-  color: var(--foreground-color);
+  color: var(--_foreground-color);
   display: grid;
   font-family: var(--font-sans);
   font-size: var(--fs-mid);
@@ -79,11 +167,13 @@ main:has(details[name="nav"][open]) > details[name="nav"]:not([open]) {
 
 details[name="nav"] {
   summary {
-    color: var(--background-color);
+    color: transparent;
     font-size: var(--fs-max);
     font-weight: 900;
-    letter-spacing: -0.03em;
+    font-variation-settings: "wdth" 125;
+    letter-spacing: -0.05em;
     line-height: 0.8;
+    mix-blend-mode: difference;
     -webkit-text-stroke: 2px var(--foreground-color);
     text-transform: uppercase;
     list-style-type: none;
@@ -91,15 +181,16 @@ details[name="nav"] {
   }
 
   ul {
-    padding: var(--spacing-min);
+    mix-blend-mode: difference;
     list-style-type: none;
+    padding: var(--spacing-min);
   }
 
   a {
     color: inherit;
     text-decoration: none;
     &:visited {
-      color: var(--foreground-color-dim);
+      color: inherit;
     }
     &:hover {
       color: var(--foreground-color);
@@ -114,50 +205,76 @@ details[name="nav"] {
   }
 }
 
-@media (hover: hover) {
-  details[name="nav"] {
-    summary:hover {
-      color: var(--foreground-color);
-    }
-    &[open] {
-      summary:hover {
-        color: var(--background-color);
-      }
-    }
-    a {
-      &:hover {
-        color: var(--foreground-color);
-        text-decoration: underline;
-      }
-    }
-  }
-}
+/* ========================================================================== */
+/* # Background transition states */
+/* ========================================================================== */
 
-/* INPUT */
-/* ======================================== */
-:root {
-  --orbit-x: 0.875;
+body:has(details[name="nav"][id="design"][open]) #scene {
+  --orbit-x: 0.625;
   --orbit-y: 0;
-  --depth-mod: 0;
+  --pan-y: 0;
+  --zoom: 0.625;
+  --perspective: 1;
+  --depth-mod: 0.75;
 }
 
-/* SCENE */
-/* ======================================== */
+body:has(details[name="nav"][id="music"][open]) #scene {
+  --orbit-x: 0.125;
+  --orbit-y: 0.125;
+  --pan-y: 0;
+  --zoom: 0.5;
+  --perspective: 0.01;
+  --depth-mod: 0.25;
+}
+
+body:has(details[name="nav"][id="art"][open]) #scene {
+  --orbit-x: -0.375;
+  --orbit-y: 0.225;
+  --pan-y: 0.125;
+  --zoom: 0.5;
+  --perspective: 0.01;
+  --depth-mod: 0.25;
+  --leg-pos: -0.25;
+  --arm-pos: -1;
+  --stem-pos: 0.25;
+  --ascender-pos: 0.25;
+}
+
+body:has(details[name="nav"][id="about"][open]) #scene {
+  --orbit-x: -0.125;
+  --orbit-y: 0;
+  --pan-y: 0.0;
+  --zoom: 0.25;
+  --perspective: 0.01;
+  --depth-mod: 0.5;
+}
+
+/* ========================================================================== */
+/* # Background */
+/* ========================================================================== */
 #scene {
-  /* Input */
+/* ## Input
+/* ========================================================================== */
   --_rotate-y: var(--orbit-x);
   --_rotate-x: var(--orbit-y);
+  --_pan-y: var(--pan-y);
+  --_zoom: var(--zoom);
+  --_perspective: var(--perspective);
   --_ascender-depth: calc(0.75em + sin(-1 * 360deg * var(--depth-mod)) * cos(180deg * 2 * (var(--depth-mod) + 0.25)) * 0.5em);
   --_stem-depth: calc(0.75em + sin(-1 * 360deg * var(--depth-mod)) * sin(360deg * 2 * (var(--depth-mod) + 0.25)) * 0.5em);
   --_arm-depth: calc(0.75em + sin(360deg * 2 * (var(--depth-mod) + 0.25)) * 0.5em);
   --_leg-depth: calc(0.75em + cos(180deg * 2 * (var(--depth-mod) + 0.25)) * 0.5em);
-  /* --_ascender-pos: calc(sin(360deg * 2 * (var(--depth-mod) + 0.25)) * 0.25em); */
-  --_ascender-pos: 0em;
-  --_stem-pos: 0em;
-  --_arm-pos: 0em;
-  --_leg-pos: 0em;
+  --_ascender-pos: calc(1em * var(--ascender-pos));
+  --_stem-pos: calc(1em * var(--stem-pos));
+  --_arm-pos: calc(1em * var(--arm-pos));
+  --_leg-pos: calc(1em * var(--leg-pos));
 
-  /* Config */
+  --_orbit-duration: 0.75s;
+  --_depth-mod-duration: 1.25s;
+  --_zoom-duration: 1s;
+
+/* ## Config
+/* ========================================================================== */
   --_unit: min(35vh, 35vw); /* This equals '1em'. */
   --_scene-height: 100svh;
   --_scene-width: 100svw;
@@ -165,20 +282,37 @@ details[name="nav"] {
   --_background-color: light-dark(#e0e0e0e0, #121212);
   --_foreground-color: light-dark(#757575, #e0e0e0);
 
+  --_front-color: hsl(from var(--_foreground-color) h s l / 1);
   --_sides-gradient: linear-gradient(90deg, hsl(from var(--_foreground-color) h s l / 0.5), 25%, hsl(from var(--_background-color) h s l / 0));
 
-  /* Utility */
+/* ## Utility
+/* ========================================================================== */
   --_center-face: translate(-50%, -50%);
 
+/* ## Actual properties
+/* ========================================================================== */
   background-color: var(--_background-color);
+  /* clip-path: circle(calc(0.5 * 1em)); */
   font-size: var(--_unit);
   grid-area: a;
   min-height: var(--_scene-height);
   min-width: var(--_scene-width);
-  position: relative;
-  perspective: 5em;
-  perspective-origin: 50% 50%;
   overflow: hidden;
+  perspective: calc(500em * var(--_perspective));
+  perspective-origin: 50% 50%;
+  position: relative;
+  transition:
+  --orbit-x var(--_orbit-duration) ease,
+  --orbit-y var(--_orbit-duration) ease,
+  --pan-y var(--_orbit-duration) ease,
+  --zoom var(--_zoom-duration) ease,
+  --perspective var(--_zoom-duration) ease,
+  --depth-mod var(--_depth-mod-duration) ease,
+  --ascender-pos var(--_depth-mod-duration) ease,
+  --stem-pos var(--_depth-mod-duration) ease,
+  --arm-pos var(--_depth-mod-duration) ease,
+  --leg-pos var(--_depth-mod-duration) ease
+;
   z-index: -1;
 }
 
@@ -188,15 +322,20 @@ details[name="nav"] {
   left: 50%;
 }
 
-/* LOGO */
-/* ======================================== */
+/* ## Logo
+/* ========================================================================== */
 /* Camera rotation and vertical centering */
 #k0v1 {
-  right: 0%;
+  /* right: 0%; */
   transform:
     rotateY(calc(var(--_rotate-y) * 360deg))
     rotateX(calc(var(--_rotate-x) * 360deg))
-    translateY(-0.22em);
+    translateY(-0.22em)
+    /* translateY(-0.68em) */ /* for clipping with circle */
+    /* translateX(0.06em) */ /* for clipping with circle */
+    translateY(calc(var(--_pan-y) * 5em))
+    scale3d(calc(var(--_zoom) * 3), calc(var(--_zoom) * 3), calc(var(--_zoom) * 3))
+  ;
   transform-style: preserve-3d;
 }
 
@@ -204,11 +343,11 @@ details[name="nav"] {
 .center { transform: var(--_center-face); }
 .center, .center > * { transform-style: preserve-3d; }
 
-/* ASSEMBLY */
-/* ======================================== */
-/* Ascender, arm and stem are the same shapes */
+/* ## Assembly
+/* ========================================================================== */
+/* Ascender, arm, and stem are the same shapes */
 .front {
-  background-color: var(--_foreground-color);
+  background: var(--_front-color);
   clip-path: polygon(0 0, 100% 100%, 0 100%);
   width: 1em;
   height: 1em;
@@ -287,5 +426,28 @@ details[name="nav"] {
     width: var(--_depth);
 
     transform: var(--_center-face) translate(0, 0.25em) rotateY(90deg);
+  }
+}
+
+/* ========================================================================== */
+/* # Hover states */
+/* ========================================================================== */
+
+@media (hover: hover) {
+  details[name="nav"] {
+    summary:hover {
+      color: var(--foreground-color);
+    }
+    &[open] {
+      summary:hover {
+        color: var(--background-color);
+      }
+    }
+    a {
+      &:hover {
+        color: var(--foreground-color);
+        text-decoration: underline;
+      }
+    }
   }
 }

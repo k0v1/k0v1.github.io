@@ -18,6 +18,9 @@
 :root {
   --orbit-x: 0.875;
   --orbit-y: 0;
+  --pan-x: 0;
+  --pan-y: 0;
+  --zoom: 0.5;
   --depth-mod: 0;
 }
 
@@ -34,7 +37,7 @@
 /* DEFAULT STYLES */
 /* ======================================== */
 html {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
@@ -51,6 +54,9 @@ body {
   /* Input */
   --_rotate-y: var(--orbit-x);
   --_rotate-x: var(--orbit-y);
+  --_pan-x: var(--pan-x);
+  --_pan-y: var(--pan-y);
+  --_zoom: var(--zoom);
   --_ascender-depth: calc(0.75em + sin(-1 * 360deg * var(--depth-mod)) * cos(180deg * 2 * (var(--depth-mod) + 0.25)) * 0.5em);
   --_stem-depth: calc(0.75em + sin(-1 * 360deg * var(--depth-mod)) * sin(360deg * 2 * (var(--depth-mod) + 0.25)) * 0.5em);
   --_arm-depth: calc(0.75em + sin(360deg * 2 * (var(--depth-mod) + 0.25)) * 0.5em);
@@ -79,7 +85,7 @@ body {
   min-height: var(--_scene-height);
   min-width: var(--_scene-width);
   position: relative;
-  perspective: 5em;
+  perspective: 1000em;
   perspective-origin: 50% 50%;
   overflow: hidden;
   z-index: -1;
@@ -98,7 +104,11 @@ body {
   transform:
     rotateY(calc(var(--_rotate-y) * 360deg))
     rotateX(calc(var(--_rotate-x) * 360deg))
-    translateY(-0.22em);
+    translateY(-0.22em)
+    translateX(calc(var(--_pan-x) * 5em))
+    translateY(calc(var(--_pan-y) * 5em))
+    scale3d(calc(var(--_zoom) * 3), calc(var(--_zoom) * 3), calc(var(--_zoom) * 3))
+  ;
   transform-style: preserve-3d;
 }
 

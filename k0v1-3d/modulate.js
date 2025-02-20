@@ -35,9 +35,10 @@ class MorphUI extends HTMLElement {
 
     article {
       align-items: stretch;
-      backdrop-filter: blur(10px);
-      background: linear-gradient( #9E9E9E66, #FAFAFA66);
-      border: solid 1px #fafafa44;
+      accent-color: blueviolet;
+      backdrop-filter: blur(16px);
+      background-color: light-dark(#e0e0e0e0, #121212);
+      border: solid 1px blueviolet;
       box-shadow: 0 0.5rem 1.5rem #607D8B44;
       border-radius: 1em;
       display: grid;
@@ -65,6 +66,18 @@ class MorphUI extends HTMLElement {
         <label for="orbit-y">
           Orbit-Y:
           <input name="orbit-y" is="attached-to-prop" prop="--orbit-y" type="range" min="0" max="1" step="0.001">
+        </label>
+        <label for="pan-x">
+          Pan-X:
+          <input name="pan-x" is="attached-to-prop" prop="--pan-x" type="range" min="-1" max="1" step="0.001">
+        </label>
+        <label for="pan-y">
+          Pan-Y:
+          <input name="pan-y" is="attached-to-prop" prop="--pan-y" type="range" min="-1" max="1" step="0.001">
+        </label>
+        <label for="zoom">
+          Zoom:
+          <input name="zoom" is="attached-to-prop" prop="--zoom" type="range" min="0" max="1" step="0.001">
         </label>
         <label for="depth-mod">
           Depth-mod:
