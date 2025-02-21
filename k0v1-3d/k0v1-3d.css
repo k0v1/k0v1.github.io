@@ -170,12 +170,12 @@ body {
 #leg {
   --_depth: var(--_leg-depth);
 
-  transform: translate(0, calc(1.125 * 1.414em)) scale3d(125%, 125%, 100%)
-    rotateZ(135deg) translateZ(var(--_leg-pos));
+  transform: translate(0.5em, calc(1.205em)) /* scale3d(125%, 125%, 100%) */
+    rotateZ(0deg) translateZ(var(--_leg-pos));
 
   .front {
     /* background-color: var(--_foreground-color); */
-    clip-path: polygon(0 0, 50% 50%, 50% 100%, 0 100%);
+    /* clip-path: polygon(0 0, 50% 50%, 50% 100%, 0 100%); */
     width: 1em;
     height: 1em;
     transform: var(--_center-face) translateZ(calc(var(--_depth) / 2));
@@ -193,11 +193,11 @@ body {
       rotateY(90deg) rotateX(90deg);
   }
 
-  .side-04 {
+/*   .side-04 {
     background: var(--_sides-gradient);
     height: calc(0.5em);
     width: var(--_depth);
 
     transform: var(--_center-face) translate(0, 0.25em) rotateY(90deg);
-  }
+  } */
 }
