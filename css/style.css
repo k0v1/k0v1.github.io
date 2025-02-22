@@ -1,98 +1,48 @@
 /* TODO */
 /* 
-x outlined text
-x proper states for nav
-x about spacing
-x about content
-- linking behance, etc.
-X transitions
-x merge the 3d scene for the background
-x create infinite animations of orbit-x and depth-mod (@property)
-x animate usin :has()
-x text color should be the inverse of the background content
-x change Inter to Archivo
-X max font size too big for mobile
-X transition glitch at 'art'
-! general cleanup and comments pls
-X header skews the composition on 'about'
-- chrome for ubuntu renders 3d sluggish af compared to firefox (O_O)
-X need dedicated close button inside every 'details'
+- linking content
+X general cleanup and comments pls
 - adjust font-sizes
 - create consistent spacing
 - block margin on the open detail?
 - fill on the open detail's summary?
 - anyways, something's off with the hierarchy there
 - transition timing system
-- polish the transitions of the '+' icons to match the color transitions of the text
-- optimize, optimize, optimize
+X polish the transitions of the '+' icons
 */
 
-/* ========================================================================== */
-/* # Reset */
-/* ========================================================================== */
-
-@import url("/css/reset.css");
 
 /* ========================================================================== */
-/* # Background props for transitions */
+/* # Imports */
 /* ========================================================================== */
 
-@property --orbit-x { initial-value: 0.125; inherits: false; syntax: '<number>'; }
-@property --orbit-y { initial-value: 0; inherits: false; syntax: '<number>'; }
-@property --pan-y { initial-value: 0; inherits: false; syntax: '<number>'; }
-@property --zoom { initial-value: 1; inherits: false; syntax: '<number>'; }
-@property --perspective { initial-value: 0.25; inherits: false; syntax: '<number>'; }
-@property --depth-mod { initial-value: 0; inherits: false; syntax: '<number>'; }
-@property --ascender-pos { initial-value: 0; inherits: false; syntax: '<number>'; }
-@property --stem-pos { initial-value: 0; inherits: false; syntax: '<number>'; }
-@property --arm-pos { initial-value: 0; inherits: false; syntax: '<number>'; }
-@property --leg-pos { initial-value: 0; inherits: false; syntax: '<number>'; }
+@import url("/css/reset.css"); /* Minimal reset */
+@import url("/css/scene.css"); /* Background scene */
+
 
 /* ========================================================================== */
 /* # Config */
 /* ========================================================================== */
 
 :root {
-  --font-sans: Archivo, sans-serif;
-  --font-mono: Space Mono, monospace;
+  --font-family-sans: Archivo, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 
-  --fs-min: 0.875rem;
-  --fs-mid: 1.5rem;
-  --fs-max: max(min(1.25rem + 20svh, 1.25rem + 10svw), 3rem);
+  --font-size-min: 0.875rem;
+  --font-size-mid: 1.5rem;
+  --font-size-max: max(min(1.25rem + 20svh, 1.25rem + 10svw), 3rem);
 
-  --spacing-min: clamp(0rem, 0.25rem + 2vw, 50rem);
+  --spacing-min: clamp(0rem, 0.25rem + 2vw, 50rem); /* TODO wtf? */
 
   --color-foreground: light-dark(#9E9E9E, #bdbdbd);
   --color-background: light-dark(#e0e0e0, #212121);
   --color-text: light-dark(#121212, #fafafa);
   --color-accent: var(--color-text);
-
-  --orientation-duration: 0.75s;
-  --depth-mod-duration: 1.25s;
-  --zoom-duration: 1s;
-
-/*   --orbit-x: 0;
-  --orbit-y: 0;
-  --pan-y: 0;
-  --zoom: 0.5;
-  --perspective: 1;
-  --depth-mod: 0;
-  --ascender-pos: 0;
-  --stem-pos: 0;
-  --arm-pos: 0;
-  --leg-pos: 0; */
 }
+
 
 /* ========================================================================== */
 /* # General styles */
 /* ========================================================================== */
-
-@font-face {
-  font-display: swap;
-  font-family: 'Inter';
-  font-weight: 100 900;
-  src: url('/fonts/Inter-VariableFont_opsz\,wght.ttf') format(truetype);
-}
 
 @font-face {
   font-display: swap;
@@ -101,104 +51,49 @@ X need dedicated close button inside every 'details'
   src: url('/fonts/Archivo-VariableFont_wdth\,wght.ttf') format(truetype);
 }
 
-@font-face {
-  font-display: swap;
-  font-family: 'Space Mono';
-  font-weight: 400;
-  src: url('/fonts/space-mono-latin-400.woff2') format(truetype);
-}
-
-html {
-  color-scheme: light dark;
-  interpolate-size: allow-keywords;
-  transition-behavior: allow-discrete;
-}
-
-*,
-*::after,
-*::before {
-  box-sizing: border-box;
-  font: inherit;
-  margin: 0;
-  padding: 0;
-}
-
 body {
   background-color: var(--color-background);
   color: var(--color-text);
-  display: grid;
-  font-family: var(--font-sans);
-  font-size: var(--fs-mid);
-  grid-template-areas: "a";
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-mid);
   line-height: 1.3;
   min-height: 100svh;
-}
 
-main {
-  backdrop-filter: blur(32px);
-  grid-area: a;
-  padding: var(--spacing-min);
-  position: relative;
-  transition: backdrop-filter 0.75s ease-out;
-}
-
-main:has(details[name="nav"][open]) {
-  backdrop-filter: blur(0px);
-  & > details[name="nav"]:not([open]) {
-/*     display: none; */
-    /* opacity: 0; */
+  &:has(#background-scene) {
+    display: grid;
+    /* full-screen grid-cell to layer navigation on top of the background scene*/
+    grid-template-areas: "background-scene";
   }
 }
 
-details[name="nav"]::details-content {
-  block-size: 0;
-  overflow-y: hidden;
-  transition: all 0.25s ease-out;
-  transition-behavior: allow-discrete;
-}
 
-details[name="nav"][open]::details-content {
-  block-size: auto;
-  transition: all 0.25s ease-out;
-}
+/* ========================================================================== */
+/* # Homepage navigation */
+/* ========================================================================== */
 
-details[name="nav"][open] {
-/*   transition: */
-/*   display 0.25s ease-out, */
-/*   opacity 0.25s ease */
-/*   top 0.5s ease-in */
-/*   ; */
-/*   transition-behavior: allow-discrete; */
+nav {
+  grid-area: background-scene; /* on top of '#background-scene' */
+  padding: var(--spacing-min);
+
+  &:has(details[name="nav"]) {
+    backdrop-filter: blur(32px);
+    transition: backdrop-filter 0.75s ease-out;
+  }
+
+  &:has(details[name="nav"][open]) {
+    backdrop-filter: blur(0px);
+  }
 }
 
 details[name="nav"] {
   --_stroke-width: 2px;
-
-  /* opacity: 1; */
-/*   position: absolute; */
-  transition:
-/*     display 0.25s ease-out, */
-    opacity 0.25s ease
-/*     top 0.15s ease-out */
-  ;
-/*   transition-behavior: allow-discrete; */
-
-/*   &#design { top: calc(2rem + 0 * var(--fs-max)); }
-  &#music { top: calc(2rem + 1 * var(--fs-max)); }
-  &#art { top: calc(2rem + 2 * var(--fs-max)); }
-  &#about { top: calc(2rem + 3 * var(--fs-max)); } */
-
-/*   &[open]&#design { top: 2rem; }
-  &[open]&#music { top: 2rem; }
-  &[open]&#art { top: 2rem; }
-  &[open]&#about { top: 2rem; } */
 
   summary {
     align-items: center;
     color: transparent;
     cursor: pointer;
     display: flex;
-    font-size: var(--fs-max);
+    font-size: var(--font-size-max);
     font-weight: 900;
     font-variation-settings: "wdth" 125;
     gap: 1rem;
@@ -207,42 +102,69 @@ details[name="nav"] {
     line-height: 0.8;
     list-style-type: none;
     text-transform: uppercase;
-    transition: color 0.5s ease-out;
-    /* transition: color 0.125s ease-in; */
     user-select: none;
     -webkit-text-stroke: var(--_stroke-width) var(--color-accent);
   }
 
+/* ## Icon button
+/* ========================================================================== */
   summary::after {
     --_icon-stroke-width: var(--_stroke-width);
-    --_icon-size: calc(var(--fs-max) / pow(1.618, 4));
+    --_icon-size: calc(var(--font-size-max) / pow(1.618, 4));
     --_icon-color: var(--color-text);
     
     --_icon-point-coordinate-sm: calc(50% - 0.5 * var(--_icon-stroke-width));
     --_icon-point-coordinate-lg: calc(var(--_icon-point-coordinate-sm) + var(--_icon-stroke-width));
     
     background-color: var(--_icon-color);
-    clip-path: polygon(var(--_icon-point-coordinate-sm) 0%, var(--_icon-point-coordinate-lg) 0%, var(--_icon-point-coordinate-lg) var(--_icon-point-coordinate-sm), 100% var(--_icon-point-coordinate-sm), 100% var(--_icon-point-coordinate-lg), var(--_icon-point-coordinate-lg) var(--_icon-point-coordinate-lg), var(--_icon-point-coordinate-lg) 100%, var(--_icon-point-coordinate-sm) 100%, var(--_icon-point-coordinate-sm) var(--_icon-point-coordinate-lg), 0% var(--_icon-point-coordinate-lg), 0% var(--_icon-point-coordinate-sm), var(--_icon-point-coordinate-sm) var(--_icon-point-coordinate-sm));
+    clip-path: polygon(
+      var(--_icon-point-coordinate-sm) 0%,
+      var(--_icon-point-coordinate-lg) 0%,
+      var(--_icon-point-coordinate-lg) var(--_icon-point-coordinate-sm),
+      100% var(--_icon-point-coordinate-sm),
+      100% var(--_icon-point-coordinate-lg),
+      var(--_icon-point-coordinate-lg) var(--_icon-point-coordinate-lg),
+      var(--_icon-point-coordinate-lg) 100%,
+      var(--_icon-point-coordinate-sm) 100%,
+      var(--_icon-point-coordinate-sm) var(--_icon-point-coordinate-lg),
+      0% var(--_icon-point-coordinate-lg),
+      0% var(--_icon-point-coordinate-sm),
+      var(--_icon-point-coordinate-sm) var(--_icon-point-coordinate-sm)
+    );
     content: '';
     display: block;
     height: var(--_icon-size);
     transition:
-      clip-path 0.25s ease-out,
-      margin-right 0.125s ease-in
+      clip-path 0.25s ease-out
     ;
     width: var(--_icon-size);
     z-index: 1;
   }
 
+/* ## Icon button transition
+/* ========================================================================== */
   &[open] > summary::after {
     --_icon-color: var(--color-accent);
     
-    clip-path: polygon(var(--_icon-point-coordinate-sm) var(--_icon-point-coordinate-sm), var(--_icon-point-coordinate-lg) var(--_icon-point-coordinate-sm), var(--_icon-point-coordinate-lg) var(--_icon-point-coordinate-sm), 100% var(--_icon-point-coordinate-sm), 100% var(--_icon-point-coordinate-lg), var(--_icon-point-coordinate-lg) var(--_icon-point-coordinate-lg), var(--_icon-point-coordinate-lg) var(--_icon-point-coordinate-lg), var(--_icon-point-coordinate-sm) var(--_icon-point-coordinate-lg), var(--_icon-point-coordinate-sm) var(--_icon-point-coordinate-lg), 0% var(--_icon-point-coordinate-lg), 0% var(--_icon-point-coordinate-sm), var(--_icon-point-coordinate-sm) var(--_icon-point-coordinate-sm));
+    clip-path: polygon(
+      var(--_icon-point-coordinate-sm) var(--_icon-point-coordinate-sm),
+      var(--_icon-point-coordinate-lg) var(--_icon-point-coordinate-sm),
+      var(--_icon-point-coordinate-lg) var(--_icon-point-coordinate-sm),
+      100% var(--_icon-point-coordinate-sm),
+      100% var(--_icon-point-coordinate-lg),
+      var(--_icon-point-coordinate-lg) var(--_icon-point-coordinate-lg),
+      var(--_icon-point-coordinate-lg) var(--_icon-point-coordinate-lg),
+      var(--_icon-point-coordinate-sm) var(--_icon-point-coordinate-lg),
+      var(--_icon-point-coordinate-sm) var(--_icon-point-coordinate-lg),
+      0% var(--_icon-point-coordinate-lg),
+      0% var(--_icon-point-coordinate-sm),
+      var(--_icon-point-coordinate-sm) var(--_icon-point-coordinate-sm)
+    );
     transform: rotate(180deg);
     transform-origin: center;
     transition:
-      all 0.25s ease-in,
-      margin-right 0.125s ease-in
+      clip-path 0.25s ease-in,
+      transform 0.25s ease-in
     ;
   }
 
@@ -265,255 +187,36 @@ details[name="nav"] {
   }
 }
 
-/* ========================================================================== */
-/* # Background transition states */
-/* ========================================================================== */
-
-body:has(details[name="nav"][id="design"][open]) #scene {
-  --orbit-x: 0.625;
-  --orbit-y: 0;
-  --pan-y: 0;
-  --zoom: 0.625;
-  --perspective: 1;
-  --depth-mod: 0.75;
-}
-
-body:has(details[name="nav"][id="music"][open]) #scene {
-  --orbit-x: 0.125;
-  --orbit-y: 0.125;
-  --pan-y: 0;
-  --zoom: 0.5;
-  --perspective: 0.01;
-  --depth-mod: 0.25;
-}
-
-body:has(details[name="nav"][id="art"][open]) #scene {
-  --orbit-x: -0.375;
-  --orbit-y: 0.225;
-  --pan-y: 0.125;
-  --zoom: 0.5;
-  --perspective: 0.01;
-  --depth-mod: 0.25;
-  --leg-pos: -0.25;
-  --arm-pos: -1;
-  --stem-pos: 0.25;
-  --ascender-pos: 0.25;
-}
-
-body:has(details[name="nav"][id="about"][open]) #scene {
-  --orbit-x: -0.125;
-  --orbit-y: 0;
-  --pan-y: 0.0;
-  --zoom: 0.25;
-  --perspective: 0.01;
-  --depth-mod: 0.5;
-}
-
-/* ========================================================================== */
-/* # Background */
-/* ========================================================================== */
-#scene {
-/* ## Input
-/* ========================================================================== */
-  --_rotate-y: var(--orbit-x);
-  --_rotate-x: var(--orbit-y);
-  --_pan-y: var(--pan-y);
-  --_zoom: var(--zoom);
-  --_perspective: var(--perspective);
-  --_ascender-depth: calc(0.75em + sin(-1 * 360deg * var(--depth-mod)) * cos(180deg * 2 * (var(--depth-mod) + 0.25)) * 0.5em);
-  --_stem-depth: calc(0.75em + sin(-1 * 360deg * var(--depth-mod)) * sin(360deg * 2 * (var(--depth-mod) + 0.25)) * 0.5em);
-  --_arm-depth: calc(0.75em + sin(360deg * 2 * (var(--depth-mod) + 0.25)) * 0.5em);
-  --_leg-depth: calc(0.75em + cos(180deg * 2 * (var(--depth-mod) + 0.25)) * 0.5em);
-  --_ascender-pos: calc(1em * var(--ascender-pos));
-  --_stem-pos: calc(1em * var(--stem-pos));
-  --_arm-pos: calc(1em * var(--arm-pos));
-  --_leg-pos: calc(1em * var(--leg-pos));
-
-/* ## Config
-/* ========================================================================== */
-  --_unit: min(35vh, 35vw); /* This equals '1em'. */
-  --_scene-height: 100svh;
-  --_scene-width: 100svw;
-
-  --_background-color: var(--color-background);
-  --_foreground-color: var(--color-foreground);
-
-  --_front-color: hsl(from var(--_foreground-color) h s l / 0.75);
-  --_sides-gradient-100: linear-gradient(90deg, hsl(from var(--_foreground-color) h s l / 0.250), 25%, hsl(from var(--_background-color) h s l / 0));
-  --_sides-gradient-200: linear-gradient(90deg, hsl(from var(--_foreground-color) h s l / 0.375), 25%, hsl(from var(--_background-color) h s l / 0));
-  --_sides-gradient-300: linear-gradient(90deg, hsl(from var(--_foreground-color) h s l / 0.500), 25%, hsl(from var(--_background-color) h s l / 0));
-  --_sides-gradient-400: linear-gradient(90deg, hsl(from var(--_foreground-color) h s l / 0.625), 25%, hsl(from var(--_background-color) h s l / 0));
-
-/* ## Utility
-/* ========================================================================== */
-  --_center-face: translate(-50%, -50%);
-
-/* ## Actual properties
-/* ========================================================================== */
-  background-color: var(--_background-color);
-  /* clip-path: circle(calc(0.5 * 1em)); */
-  font-size: var(--_unit);
-  grid-area: a;
-  min-height: var(--_scene-height);
-  min-width: var(--_scene-width);
-  overflow: hidden;
-  perspective: calc(500em * var(--_perspective));
-  perspective-origin: 50% 50%;
-  position: relative;
-  transition:
-  --orbit-x var(--orientation-duration) ease,
-  --orbit-y var(--orientation-duration) ease,
-  --pan-y var(--orientation-duration) ease,
-  --zoom var(--zoom-duration) ease,
-  --perspective var(--zoom-duration) ease,
-  --depth-mod var(--depth-mod-duration) ease,
-  --ascender-pos var(--depth-mod-duration) ease,
-  --stem-pos var(--depth-mod-duration) ease,
-  --arm-pos var(--depth-mod-duration) ease,
-  --leg-pos var(--depth-mod-duration) ease
-;
-  z-index: -1;
-}
-
-#scene * {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-}
-
-/* ## Logo
-/* ========================================================================== */
-/* Camera rotation and vertical centering */
-#k0v1 {
-  /* right: 0%; */
-  transform:
-    rotateY(calc(var(--_rotate-y) * 360deg))
-    rotateX(calc(var(--_rotate-x) * 360deg))
-    translateY(-0.22em)
-    /* translateY(-0.68em) */ /* for clipping with circle */
-    /* translateX(0.06em) */ /* for clipping with circle */
-    translateY(calc(var(--_pan-y) * 5em))
-    scale3d(calc(var(--_zoom) * 3), calc(var(--_zoom) * 3), calc(var(--_zoom) * 3))
-  ;
-  transform-style: preserve-3d;
-}
-
-/* Matching coordinate systems */
-.center { transform: var(--_center-face); }
-.center, .center > * { transform-style: preserve-3d; }
-
-/* ## Assembly
-/* ========================================================================== */
-/* Ascender, arm, and stem are the same shapes */
-.front {
-  background: var(--_front-color);
-  clip-path: polygon(0 0, 100% 100%, 0 100%);
-  width: 1em;
-  height: 1em;
-  transform: var(--_center-face) translateZ(calc(var(--_depth) / 2));
-}
-
-.side-01 {
-  width: var(--_depth);
-  height: 1em;
-  transform: var(--_center-face) translate(-0.5em, 0) rotateY(-90deg) rotateZ(180deg);
-}
-
-.side-02 {
-  width: var(--_depth);
-  height: 1em;
-  transform: var(--_center-face) translate(0, 0.5em) rotateY(90deg)
-    rotateX(-90deg);
-}
-
-.side-03 {
-  width: var(--_depth);
-  height: 1.414em;
-  transform: var(--_center-face) rotateZ(45deg) rotateY(90deg) rotateX(90deg);
-}
-
-#ascender {
-  --_depth: var(--_ascender-depth);
-
-  transform: translate(-0.707em, -0.707em) rotateZ(45deg) translateZ(var(--_ascender-pos));
-
-  .side-01 { background: var(--_sides-gradient-100); }
-  .side-02 { background: var(--_sides-gradient-300); }
-  .side-03 { background: var(--_sides-gradient-200); }
-}
-
-#arm {
-  --_depth: var(--_arm-depth);
-
-  transform: rotateZ(-45deg) translateZ(var(--_arm-pos));
-
-  .side-01 { background: var(--_sides-gradient-300); }
-  .side-02 { background: var(--_sides-gradient-200); }
-  .side-03 { background: var(--_sides-gradient-100); }
-}
-
-#stem {
-  --_depth: var(--_stem-depth);
-
-  transform: translate(-1.15em, 1.15em) rotateZ(-135deg) translateZ(var(--_stem-pos));
-
-  .side-01 { background: var(--_sides-gradient-300); }
-  .side-02 { background: var(--_sides-gradient-100); }
-  .side-03 { background: var(--_sides-gradient-200); }
-}
-
-#leg {
-  --_depth: var(--_leg-depth);
-
-  transform: translate(0.5em, calc(1.205em)) /* scale3d(125%, 125%, 100%) */
-    rotateZ(0deg) translateZ(var(--_leg-pos));
-
-  .front {
-    /* clip-path: polygon(0 0, 50% 50%, 50% 100%, 0 100%); */
-    width: 1em;
-    height: 1em;
-    transform: var(--_center-face) translateZ(calc(var(--_depth) / 2));
-  }
-
-  .side-01 {
-    background: var(--_sides-gradient-100);
-  }
-
-  .side-02 {
-    background: var(--_sides-gradient-200);
-    height: calc(0.5em);
-    transform: var(--_center-face) translate(-0.25em, 0.5em) rotateY(90deg)
-      rotateX(-90deg);
-  }
-
-  .side-03 {
-    background: var(--_sides-gradient-400);
-    height: 1.414em;
-    transform: var(--_center-face) rotateZ(45deg) translate(0em, 0)
-      rotateY(90deg) rotateX(90deg);
-  }
-
-/*   .side-04 {
-    background: var(--_sides-gradient-300);
-    height: calc(0.5em);
-    width: var(--_depth);
-
-    transform: var(--_center-face) translate(0, 0.25em) rotateY(90deg);
-  } */
-}
-
-/* ========================================================================== */
-/* # Hover states */
+/* ## Accordion animation
 /* ========================================================================== */
 
+details[name="nav"]::details-content {
+  block-size: 0;
+  overflow-y: hidden;
+  transition: all 0.25s ease-out;
+  transition-behavior: allow-discrete;
+}
+
+details[name="nav"][open]::details-content {
+  block-size: auto;
+  transition: all 0.25s ease-out;
+}
+
+
+/* ========================================================================== */
+/* # Media queries */
+/* ========================================================================== */
+
+/* ## Hover states
+/* ========================================================================== */
 @media (hover: hover) {
   details[name="nav"] {
     summary:hover {
       color: var(--color-accent);
-      transition: color 0s ease-out;
     }
-    summary:hover::after {
-      margin-right: 1rem;
+    &:not([open]) > summary {
+      &::after { opacity: 0; }
+      &:hover::after { opacity: 1; }
     }
     a {
       &:hover {
@@ -524,6 +227,8 @@ body:has(details[name="nav"][id="about"][open]) #scene {
   }
 }
 
+/* ## Stroke width on small screens
+/* ========================================================================== */
 @media (max-width: 720px) {
   details[name="nav"] {
     --_stroke-width: 1px;

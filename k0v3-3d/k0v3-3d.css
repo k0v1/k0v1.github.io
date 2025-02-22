@@ -21,8 +21,9 @@
   /* Utilities */
   --_center: translateX(-50%) translateY(-50%);
 
-  background-color: #e0e0e0;
-  font-size: min(25svw, 25svh);
+  /* background-color: #e0e0e0; */
+  background: radial-gradient(#fafafa, #e0e0e0);
+  font-size: min(30svw, 30svh); /* this eqals 1em */
   height: 100svh;
   overflow: hidden;
   perspective: 5em;
@@ -55,7 +56,7 @@
 
     transform:
       var(--_center)
-      rotateY(calc(-90deg + var(--_fold) * 180deg));
+      rotateY(calc(var(--_fold) * 90deg));
     ;
   }
 
@@ -67,13 +68,14 @@
 
     transform:
       var(--_center)
-      rotateY(calc(90deg + var(--_fold) * -180deg));
+      rotateY(calc(var(--_fold) * -90deg));
     ;
   }
 
 }
 
 .art {
+  --_waterbomb-pos-compensation: max(var(--_fold) * 0.1em, var(--_fold) * -0.1em);
   & > #ascender {
     transform:
       translateX(0em)

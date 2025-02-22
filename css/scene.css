@@ -1,0 +1,242 @@
+/* TODO */
+/* 
+- optimize '*-pos' transitions
+- recreate compositions with '*-pos' instead of depth
+- simplify colors
+- simplify gradients
+*/
+
+
+/* ========================================================================== */
+/* # Props for transitions */
+/* ========================================================================== */
+
+@property --ascender-pos { initial-value: 0; inherits: false; syntax: '<number>'; } /* transition transform directly */
+@property --stem-pos { initial-value: 0; inherits: false; syntax: '<number>'; } /* transition transform directly */
+@property --arm-pos { initial-value: 0; inherits: false; syntax: '<number>'; } /* transition transform directly */
+@property --leg-pos { initial-value: 0; inherits: false; syntax: '<number>'; } /* transition transform directly */
+
+/* ========================================================================== */
+/* # Transition timing config */
+/* ========================================================================== */
+
+:root {
+  --orientation-duration: 0.75s;
+  --orientation-easing: ease-in-out;
+  --depth-mod-duration: 1.25s;
+  --zoom-duration: 1s;
+}
+
+/* ========================================================================== */
+/* # Homepage navigation states */
+/* ========================================================================== */
+
+body:has(details[name="nav"][id="design"][open]) #background-scene {
+  & > #k0v1 {
+    transform:
+      rotateY(225deg)
+      rotateX(0)
+      translateY(-0.22em)
+      /* scale3d(1.875, 1.875, 1.875) */
+      scale3d(0.5, 0.5, 0.5)
+    ;
+  }
+}
+
+body:has(details[name="nav"][id="music"][open]) #background-scene {
+  & > #k0v1 {
+    transform:
+      rotateY(45deg)
+      rotateX(45deg)
+      translateY(-0.22em)
+      /* scale3d(1.5, 1.5, 1.5) */
+      scale3d(0.5, 0.5, 0.5)
+    ;
+  }
+}
+
+body:has(details[name="nav"][id="art"][open]) #background-scene {
+  & > #k0v1 {
+    transform:
+      rotateY(-135.5deg)
+      rotateX(81deg)
+      translateY(-0.22em)
+      /* scale3d(1.5, 1.5, 1.5) */
+      scale3d(0.5, 0.5, 0.5)
+    ;
+  }
+
+  --leg-pos: -0.25;
+  --arm-pos: -1;
+  --stem-pos: 0.25;
+  --ascender-pos: 0.25;
+}
+
+body:has(details[name="nav"][id="about"][open]) #background-scene {
+  & > #k0v1 {
+    transform:
+      rotateY(-45deg)
+      rotateX(0)
+      translateY(-0.22em)
+      scale3d(0.75, 0.75, 0.75)
+    ;
+  }
+}
+
+/* ========================================================================== */
+/* # Background */
+/* ========================================================================== */
+#background-scene {
+/* ## Input
+/* ========================================================================== */
+  --_ascender-pos: calc(1em * var(--ascender-pos));
+  --_stem-pos: calc(1em * var(--stem-pos));
+  --_arm-pos: calc(1em * var(--arm-pos));
+  --_leg-pos: calc(1em * var(--leg-pos));
+
+/* ## Config
+/* ========================================================================== */
+  --_unit: min(35vh, 35vw); /* This equals '1em'. */
+  --_scene-height: 100svh;
+  --_scene-width: 100svw;
+
+  --_background-color: var(--color-background);
+  --_foreground-color: var(--color-foreground);
+
+  --_front-color: hsl(from var(--_foreground-color) h s l / 0.75);
+  --_sides-gradient-100: linear-gradient(90deg, hsl(from var(--_foreground-color) h s l / 0.250), 25%, hsl(from var(--_background-color) h s l / 0));
+  --_sides-gradient-200: linear-gradient(90deg, hsl(from var(--_foreground-color) h s l / 0.375), 25%, hsl(from var(--_background-color) h s l / 0));
+  --_sides-gradient-300: linear-gradient(90deg, hsl(from var(--_foreground-color) h s l / 0.500), 25%, hsl(from var(--_background-color) h s l / 0));
+  --_sides-gradient-400: linear-gradient(90deg, hsl(from var(--_foreground-color) h s l / 0.625), 25%, hsl(from var(--_background-color) h s l / 0));
+
+/* ## Utility
+/* ========================================================================== */
+  --_center-face: translate(-50%, -50%);
+
+/* ## Actual properties
+/* ========================================================================== */
+  background-color: var(--_background-color);
+  font-size: var(--_unit);
+  grid-area: background-scene; /* under homepage navigation */
+  min-height: var(--_scene-height);
+  min-width: var(--_scene-width);
+  overflow: hidden;
+  perspective: 50em;
+  perspective-origin: 50% 50%;
+  position: relative;
+/*   transition:
+    --ascender-pos var(--depth-mod-duration) ease,
+    --stem-pos var(--depth-mod-duration) ease,
+    --arm-pos var(--depth-mod-duration) ease,
+    --leg-pos var(--depth-mod-duration) ease
+  ; */
+  z-index: -1; /* under homepage navigation */
+}
+
+#background-scene * {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+/* ## Logo
+/* ========================================================================== */
+/* Camera rotation and vertical centering */
+#k0v1 {
+  transform:
+    rotateY(calc(var(--_rotate-y) * 360deg))
+    rotateX(calc(var(--_rotate-x) * 360deg))
+    translateY(-0.22em)
+    scale3d(3, 3, 3)
+  ;
+  transform-style: preserve-3d;
+  transition: transform var(--orientation-duration) var(--orientation-easing);
+}
+
+/* Matching coordinate systems */
+.center { transform: var(--_center-face); }
+.center, .center > * { transform-style: preserve-3d; }
+
+/* ## Assembly
+/* ========================================================================== */
+.front {
+  background: var(--_front-color);
+  clip-path: polygon(0 0, 100% 100%, 0 100%);
+  width: 1em;
+  height: 1em;
+  transform:
+    var(--_center-face)
+    translateZ(0.5em);
+}
+
+.side-01 {
+  width: 1em;
+  height: 1em;
+  transform:
+    var(--_center-face)
+    translate(-0.5em, 0)
+    rotateY(-90deg)
+    rotateZ(180deg);
+}
+
+.side-02 {
+  width: 1em;
+  height: 1em;
+  transform:
+    var(--_center-face)
+    translate(0, 0.5em)
+    rotateY(90deg)
+    rotateX(-90deg);
+}
+
+.side-03 {
+  width: 1em;
+  height: 1.414em;
+  transform:
+    var(--_center-face)
+    rotateZ(45deg)
+    rotateY(90deg)
+    rotateX(90deg);
+}
+
+#ascender {
+  transform:
+  translate(-0.707em, -0.707em)
+  rotateZ(45deg)
+  translateZ(var(--_ascender-pos));
+
+  .side-01 { background: var(--_sides-gradient-100); }
+  .side-02 { background: var(--_sides-gradient-300); }
+  .side-03 { background: var(--_sides-gradient-200); }
+}
+
+#arm {
+  transform:
+    rotateZ(-45deg)
+    translateZ(var(--_arm-pos));
+
+  .side-01 { background: var(--_sides-gradient-300); }
+  .side-02 { background: var(--_sides-gradient-200); }
+  .side-03 { background: var(--_sides-gradient-100); }
+}
+
+#stem {
+  transform:
+    translate(-1.15em, 1.15em)
+    rotateZ(-135deg)
+    translateZ(var(--_stem-pos));
+
+  .side-01 { background: var(--_sides-gradient-300); }
+  .side-02 { background: var(--_sides-gradient-100); }
+  .side-03 { background: var(--_sides-gradient-200); }
+}
+
+#leg {
+  transform:
+    translate(0.5em, calc(1.205em))
+    rotateZ(0deg) translateZ(var(--_leg-pos));
+
+  .side-01 { background: var(--_sides-gradient-100); }
+  .side-02 { background: var(--_sides-gradient-200); }
+  .side-03 { background: var(--_sides-gradient-400); }
+}

@@ -71,7 +71,7 @@ class MorphUI extends HTMLElement {
         </label>
         <label for="fold">
           Fold:
-          <input name="fold" is="attached-to-prop" prop="--fold" type="range" min="0" max="1" step="0.001">
+          <input name="fold" is="attached-to-prop" prop="--fold" type="range" min="-1" max="1" step="0.001">
         </label>
       </article>
 
