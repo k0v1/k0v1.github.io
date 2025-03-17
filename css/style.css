@@ -75,14 +75,14 @@ nav {
   grid-area: background-scene; /* on top of '#background-scene' */
   padding: var(--spacing-min);
 
-  &:has(details[name="nav"]) {
+/*   &:has(details[name="nav"]) {
     backdrop-filter: blur(32px);
     transition: backdrop-filter 0.75s ease-out;
-  }
+  } */
 
-  &:has(details[name="nav"][open]) {
+/*   &:has(details[name="nav"][open]) {
     backdrop-filter: blur(0px);
-  }
+  } */
 }
 
 details[name="nav"] {
