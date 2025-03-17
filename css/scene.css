@@ -5,6 +5,7 @@ x recreate compositions with '*-pos' instead of depth
 x simplify colors
 x simplify gradients
 - create new inital state
+- move transitions under a media query
 */
 
 /* ========================================================================== */
@@ -23,7 +24,6 @@ x simplify gradients
 /* ## Initial state
 /* ========================================================================== */
 #background-scene {
-  perspective: 50em;
   & > #k0v1 {
     transform:
       var(--_v-center-composition)
@@ -35,7 +35,6 @@ x simplify gradients
 /* ## Design
 /* ========================================================================== */
 body:has(details[name="nav"][id="design"][open]) #background-scene {
-  perspective: 100em; /* lower value makes the composition undesirable */
   & > #k0v1 {
     transform:
       rotateY(225deg)
@@ -76,39 +75,38 @@ body:has(details[name="nav"][id="design"][open]) #background-scene {
 /* ## Music
 /* ========================================================================== */
 body:has(details[name="nav"][id="music"][open]) #background-scene {
-  perspective: 5em; /* smaller value results in rough transition from '100em' at '## Art' */
   & > #k0v1 {
     transform:
       rotateY(45deg)
       rotateX(45deg)
       translateY(0em)
-      scale3d(0.75, 0.75, 0.75)
+      scale3d(1, 1, 1)
     ;
     & > #ascender {
       transform:
         translate(-0.707em, -0.707em)
         rotateZ(45deg)
-        translateZ(0.75em) /* always changes */
+        translateZ(0.5em) /* always changes */
       ;
     }
     & > #arm {
       transform:
         rotateZ(-45deg)
-        translateZ(0.25em) /* always changes */
+        translateZ(0em) /* always changes */
       ;
     }
     & > #stem {
       transform:
         translate(-1.15em, 1.15em)
         rotateZ(-135deg)
-        translateZ(-0.75em)  /* always changes */
+        translateZ(-1em)  /* always changes */
       ;
     }
     & > #leg {
       transform:
         translate(0.5em, calc(1.205em))
         rotateZ(0deg)
-        translateZ(-0.25em) /* always changes */
+        translateZ(-0.5em) /* always changes */
       ;
     }
   }
@@ -117,7 +115,6 @@ body:has(details[name="nav"][id="music"][open]) #background-scene {
 /* ## Art
 /* ========================================================================== */
 body:has(details[name="nav"][id="art"][open]) #background-scene {
-  perspective: 5em; /* smaller value results in rough transition from '100em' at '[id="art"]' */
   & > #k0v1 {
     transform:
       rotateY(-135.5deg)
@@ -142,7 +139,7 @@ body:has(details[name="nav"][id="art"][open]) #background-scene {
       transform:
         translate(-1.15em, 1.15em)
         rotateZ(-135deg)
-        translateZ(0.75em) /* always changes */
+        translateZ(0.25em) /* always changes */
       ;
     }
     & > #leg {
@@ -158,7 +155,6 @@ body:has(details[name="nav"][id="art"][open]) #background-scene {
 /* ## About
 /* ========================================================================== */
 body:has(details[name="nav"][id="about"][open]) #background-scene {
-  perspective: 5em; /* smaller value results in rough transition from '100em' at '[id="art"]' */
   & > #k0v1 {
     transform:
       rotateY(-45deg)
@@ -199,9 +195,9 @@ body:has(details[name="nav"][id="about"][open]) #background-scene {
   min-height: var(--_scene-height);
   min-width: var(--_scene-width);
   overflow: hidden;
+  perspective: 100em;
   perspective-origin: 50% 50%;
   position: relative;
-  transition: perspective var(--transition-duration) var(--transition-easing);
   z-index: -1; /* under homepage navigation */
   & > #k0v1 {
     transform-style: preserve-3d;
