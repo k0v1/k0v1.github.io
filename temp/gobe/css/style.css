@@ -1,3 +1,4 @@
+/* TODO Kellenének még reveal animációk egy csomó helyre ahol a hover miatt is használom a transformot. Ezekről beszéljünk, gondolom GSAP lesz majd az egész. */
 /* ========================================================================== */
 /* # RESET */
 /* ========================================================================== */
@@ -218,6 +219,7 @@ hr {
 
 /* ## Site navigation */
 /* ========================================================================== */
+/* TODO A hero sectionnél a hamburger ikonra kattintva a menüpontok színeinél van valami glitch. */
 .main-header {
   align-content: center;
   display: flex;
@@ -373,6 +375,72 @@ hr {
   position: absolute;
   bottom: var(--spacing-xl)
 }
+
+/* ## Type animation
+/* ========================================================================== */
+.tiles {
+  padding-top: calc(100vw / 4.3);
+  overflow: clip;
+  h2 {
+    display: grid;
+    font-size: calc(100vw / 4.3);
+    grid-template-columns: repeat(5, 1fr);
+    justify-content: center;
+    line-height: 0.8em;
+    row-gap: 0.75rem;
+    /* TODO Itt bajlódtam az overflowval és a pozícionálással is, kicsit hacky az egész. */
+    span {
+      overflow: visible;
+      margin-right: var(--spacing-s);
+      padding-bottom: 1.75rem;
+      margin-bottom: -1.75rem;
+    }
+  }
+}
+
+.tiles > h2 > span {
+  animation-timeline: view(0% -25%);
+  /* Applying ease-out-in-sine to fake linear rotation of the visible edges. */
+  /* animation-timing-function: cubic-bezier(0.050, 0.445, 0.950, 0.550); */
+  animation-fill-mode: both;
+}
+
+@keyframes fake-mask-rotation-1 {
+  from { clip-path: polygon(200% 100%, 200% 100%, 0% 100%); transform: translateX(25%); }
+  to { clip-path: polygon(0% -100%, 200% 100%, 0% 100%); transform: translateX(0%);}
+}
+
+@keyframes fake-mask-rotation-2 {
+  from { clip-path: polygon(0% 200%, 0% 0%, 0% 200%); transform: translateY(25%); }
+  to { clip-path: polygon(200% 0%, 0% 0%, 0% 200%); transform: translateY(0%); }
+}
+
+@keyframes fake-mask-rotation-3 {
+  from { clip-path: polygon(-100% 0%, -100% 0%, 100% 0%); transform: translateX(-25%); }
+  to   { clip-path: polygon(100% 200%, -100% 0%, 100% 0%); transform: translateX(0%); }
+}
+
+@keyframes fake-mask-rotation-4 { 
+  from { clip-path: polygon(100% -100%, 100% -100%, 100% 100%); transform: translateY(-25%); }
+  to   { clip-path: polygon(-100% 100%, 100% -100%, 100% 100%); transform: translateY(0%); }
+}
+
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.tiles > h2 > span:nth-of-type(1n) { animation-name: fake-mask-rotation-1; }
+.tiles > h2 > span:nth-of-type(2n) { animation-name: fake-mask-rotation-2; }
+.tiles > h2 > span:nth-of-type(3n) { animation-name: fake-mask-rotation-3; }
+.tiles > h2 > span:nth-of-type(4n) { animation-name: fake-mask-rotation-4; }
+
+.tiles > h2 > span:nth-of-type( 1n) { animation-delay: 0.00s; }
+.tiles > h2 > span:nth-of-type( 2n) { animation-delay: 0.15s; }
+.tiles > h2 > span:nth-of-type( 3n) { animation-delay: 0.30s; }
+.tiles > h2 > span:nth-of-type( 4n) { animation-delay: 0.45s; }
+.tiles > h2 > span:nth-of-type( 5n) { animation-delay: 0.60s; }
+.tiles > h2 > span:nth-of-type( 6n) { animation-delay: 0.75s; }
 
 /* ## Events */
 /* ========================================================================== */
@@ -532,69 +600,6 @@ hr {
     padding-block-start: var(--spacing-s);
   }
 }
-
-.tiles {
-  padding-top: calc(100vw / 4.3);
-  overflow: clip;
-  h2 {
-    display: grid;
-    font-size: calc(100vw / 4.3);
-    grid-template-columns: repeat(5, 1fr);
-    justify-content: center;
-    line-height: 0.8em;
-    row-gap: 0.75rem;
-    span {
-      overflow: visible;
-      margin-right: var(--spacing-s);
-      padding-bottom: 1.75rem;
-      margin-bottom: -1.75rem;
-    }
-  }
-}
-
-.tiles > h2 > span {
-  animation-timeline: view(0% -25%);
-  /* Applying ease-out-in-sine to fake linear rotation of the visible edges. */
-  /* animation-timing-function: cubic-bezier(0.050, 0.445, 0.950, 0.550); */
-  animation-fill-mode: both;
-}
-
-@keyframes fake-mask-rotation-1 {
-  from { clip-path: polygon(200% 100%, 200% 100%, 0% 100%); transform: translateX(25%); }
-  to { clip-path: polygon(0% -100%, 200% 100%, 0% 100%); transform: translateX(0%);}
-}
-
-@keyframes fake-mask-rotation-2 {
-  from { clip-path: polygon(0% 200%, 0% 0%, 0% 200%); transform: translateY(25%); }
-  to { clip-path: polygon(200% 0%, 0% 0%, 0% 200%); transform: translateY(0%); }
-}
-
-@keyframes fake-mask-rotation-3 {
-  from { clip-path: polygon(-100% 0%, -100% 0%, 100% 0%); transform: translateX(-25%); }
-  to   { clip-path: polygon(100% 200%, -100% 0%, 100% 0%); transform: translateX(0%); }
-}
-
-@keyframes fake-mask-rotation-4 { 
-  from { clip-path: polygon(100% -100%, 100% -100%, 100% 100%); transform: translateY(-25%); }
-  to   { clip-path: polygon(-100% 100%, 100% -100%, 100% 100%); transform: translateY(0%); }
-}
-
-@keyframes fade-in {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
-}
-
-.tiles > h2 > span:nth-of-type(1n) { animation-name: fake-mask-rotation-1; }
-.tiles > h2 > span:nth-of-type(2n) { animation-name: fake-mask-rotation-2; }
-.tiles > h2 > span:nth-of-type(3n) { animation-name: fake-mask-rotation-3; }
-.tiles > h2 > span:nth-of-type(4n) { animation-name: fake-mask-rotation-4; }
-
-.tiles > h2 > span:nth-of-type( 1n) { animation-delay: 0.00s; }
-.tiles > h2 > span:nth-of-type( 2n) { animation-delay: 0.15s; }
-.tiles > h2 > span:nth-of-type( 3n) { animation-delay: 0.30s; }
-.tiles > h2 > span:nth-of-type( 4n) { animation-delay: 0.45s; }
-.tiles > h2 > span:nth-of-type( 5n) { animation-delay: 0.60s; }
-.tiles > h2 > span:nth-of-type( 6n) { animation-delay: 0.75s; }
 
 /* ## Media queries */
 /* ========================================================================== */
