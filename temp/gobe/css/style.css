@@ -140,9 +140,6 @@ a:active,
 a:visited {
   color: var(--teal);
   text-decoration: none;
-  &:hover {
-    text-decoration: underline;
-  }
 }
 
 section:not(.full-width) { padding: var(--spacing-xl) var(--site-padding) var(--spacing-xxl) var(--site-padding); }
@@ -188,10 +185,6 @@ hr {
   text-align: center;
   text-decoration: none;
   transition: background-color var(--time-xs) ease-in-out;
-  &:hover {
-    background-color: color-mix(in hsl, var(--teal), black var(--darken-percentage, 10%));
-    text-decoration: none!important;
-  }
 }
 
 .section-cta-wrapper {
@@ -275,10 +268,6 @@ hr {
         a {
           color: currentcolor;
           text-decoration: none;
-          &:hover {
-            color: var(--teal);
-            text-decoration: none;
-          }
         }
       }
     }
@@ -492,22 +481,6 @@ hr {
       div { align-self: end; }
     }
   }
-  &:has(figure:hover) {
-    figure:not(:hover) {
-      filter: saturate(0);
-      opacity: 0.25;
-      transform: scale(0.85);
-      figcaption {
-        opacity: 0;
-      }
-    }
-    figure:hover {
-      figcaption {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-  }
 }
 
 /* ## Shop
@@ -523,11 +496,6 @@ hr {
     grid-template-rows: auto 1fr;
     padding-block: var(--spacing-s);
     transition: all var(--time-s) ease-in-out;
-    &:hover {
-      figcaption > h4 {
-        color: var(--teal);
-      }
-    }
     figcaption {
       display: flex;
       flex-direction: column;
@@ -541,13 +509,6 @@ hr {
       mask-image: url(../img/vector-masks/mask-m-vertical.svg);
       mask-size: 100% 100%;
       object-fit: cover;
-    }
-  }
-  &:has(figure:hover) {
-    figure:not(:hover) {
-      filter: saturate(0);
-      opacity: 0.5;
-      transform: scale(0.85);
     }
   }
 }
@@ -657,4 +618,68 @@ hr {
     transition: all var(--time-m) ease-in-out;
   }
 
+}
+
+@media (hover: hover) {
+  a,
+  a:active,
+  a:visited {
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  .button-primary {
+    &:hover {
+      background-color: color-mix(in hsl, var(--teal), black var(--darken-percentage, 10%));
+      text-decoration: none!important;
+    }
+  }
+  .main-header {
+    nav {
+      menu {
+        li {
+          a {
+            &:hover {
+              color: var(--teal);
+              text-decoration: none;
+            }
+          }
+        }
+      }
+    }
+  }
+  .shop-grid {
+    figure {
+      &:hover {
+        figcaption > h4 {
+          color: var(--teal);
+        }
+      }
+    }
+    &:has(figure:hover) {
+      figure:not(:hover) {
+        filter: saturate(0);
+        opacity: 0.5;
+        transform: scale(0.85);
+      }
+    }
+  }
+  .music-grid {
+    &:has(figure:hover) {
+      figure:not(:hover) {
+        filter: saturate(0);
+        opacity: 0.25;
+        transform: scale(0.85);
+        figcaption {
+          opacity: 0;
+        }
+      }
+      figure:hover {
+        figcaption {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    }
+  }
 }
