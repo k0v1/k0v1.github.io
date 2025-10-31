@@ -142,7 +142,7 @@ a:visited {
   text-decoration: none;
 }
 
-section:not(.full-width) { padding: var(--spacing-xl) var(--site-padding) var(--spacing-xxl) var(--site-padding); }
+section:not(.full-width) { padding: var(--spacing-xl) var(--site-padding) var(--spacing-xl) var(--site-padding); }
 
 section:nth-of-type(odd) {
   background-color: var(--black);
@@ -162,7 +162,6 @@ hr {
   border-top: var(--black) 0.25px solid;
   border-bottom: none;
   margin-block: var(--spacing-m) var(--spacing-m);
-  margin-inline: auto;
   margin-inline: 10%;
 }
 
@@ -389,7 +388,7 @@ hr {
 }
 
 .tiles > h2 > span {
-  animation-timeline: view(0% -25%);
+  animation-timeline: view(0% -50%);
   /* Applying ease-out-in-sine to fake linear rotation of the visible edges. */
   /* animation-timing-function: cubic-bezier(0.050, 0.445, 0.950, 0.550); */
   animation-fill-mode: both;

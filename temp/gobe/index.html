@@ -91,8 +91,16 @@
       </h2>
     </section>
     <section class="events parallax-vertical">
-      <h2>Közelgő koncertek</h2>
-      <p>“Ez még jobb, mint a lemezen” - kapjuk meg sokszor. És mi tagadás… így van! Gyere, és győződj meg róla te is!</p>
+      <div class="section-header">
+        <div>
+          <h2>Közelgő koncertek</h2>
+          <p>“Ez még jobb, mint a lemezen” - kapjuk meg sokszor. És mi tagadás… így van! Gyere, és győződj meg róla te is!</p>
+        </div>
+        <div class="section-cta-wrapper">
+          <a class="button-primary" href="events.html">További koncertek</a>
+        </div>
+      </div>
+
       <div class="table">
 
         <p>2025/10/04</p>
@@ -123,13 +131,10 @@
         </div>
 
       </div>
-      <div class="section-cta-wrapper">
-        <a class="button-primary" href="events.html">További koncertek</a>
-      </div>
     </section>
 
     <!-- MUSIC -->
-    <section class="music">
+    <section class="music" style="padding-top: 0;"> <!-- TODO Parallax miatti eltolódás kompenzálom -->
       <div class="section-header">
         <div>
           <h2>Góbé zenék</h2>
@@ -180,6 +185,8 @@
       </article>
     </section>
 
+    <hr style="position: relative; top: calc(-1 * var(--spacing-xl)); margin-inline: 25%;">
+
     <section class="tiles full-width">
       <h2>
         <span>G</span>
@@ -195,7 +202,7 @@
     </section>
 
     <!-- SHOP -->
-    <section class="shop parallax-vertical" style="padding-bottom: 0;"> <!-- TODO A parallax anim miatt túl nagy itt a padding. -->
+    <section class="shop parallax-vertical" style="padding-bottom: 0;"> <!-- TODO Parallax miatti eltolódás kompenzálom -->
       <div class="section-header" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--spacing-m);">
         <div>
           <h2>Góbé Shop</h2>
@@ -230,6 +237,8 @@
         </figure>
       </article>
     </section>
+
+    <hr style="position: relative; top: calc(-1 * var(--spacing-xl)); margin-inline: 25%;">
 
     <section class="closing full-width">
       <img src="img/gobe_terem.png" alt="Jól szétvannak a srácok">
