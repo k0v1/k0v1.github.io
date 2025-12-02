@@ -1,0 +1,39 @@
+/* ========================================================================== */
+/* # GENERAL STYLES */
+/* ========================================================================== */
+
+/* ## General
+/* ========================================================================== */
+body {
+  background-color: var(--white);
+  color: var(--black);
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-s);
+  font-weight: 300;
+}
+
+b {
+  font-weight: 600;
+}
+
+i {
+  font-style: italic;
+}
+
+h1, h2, h3, h4, h5, h6 { font-weight: 500; }
+
+h1, h2  { font-family: var(--font-family-display); }
+
+h3, h4, h5, h6 { font-family: var(--font-family-sans); }
+
+h1 {font-size: var(--font-size-xl);}
+h2 {font-size: var(--font-size-l);}
+h3 {font-size: var(--font-size-m);}
+h4, h5, h6 {font-size: var(--font-size-s);}
+
+a,
+a:active,
+a:visited {
+  color: var(--teal);
+  text-decoration: none;
+}

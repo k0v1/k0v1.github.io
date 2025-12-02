@@ -1,0 +1,59 @@
+/* ========================================================================== */
+/* # TOKENS */
+/* ========================================================================== */
+:root {
+/* ## Colors
+/* ========================================================================== */
+    --black: #212121;
+    --light-grey: #BDBDBD;
+    --dark-grey: #616161;
+    --white: #e0e0e0;
+    --teal: #009688;
+
+    --darken-percentage: 15%;
+
+/* ## Typography
+/* ========================================================================== */
+    --font-family-sans: Roboto, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    --font-family-display: 'Gobe Display', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+    --font-size: calc(1rem + 0.25vw);
+    --line-height: calc(var(--font-size) + 0.5rem);
+
+    --font-size-ratio: 1.618;
+
+    --font-size-xs: calc(var(--font-size) / var(--font-size-ratio));
+    --font-size-s: var(--font-size);
+    --font-size-m: calc(var(--font-size) * var(--font-size-ratio));
+    --font-size-l: calc(var(--font-size-m) * var(--font-size-ratio));
+    --font-size-xl: calc(var(--font-size-l) * var(--font-size-ratio));
+    --font-size-xxl: calc(var(--font-size-xl) * var(--font-size-ratio));
+    --font-size-jumbo: max(var(--font-size-l) + 5vw, var(--font-size-xxl));
+    --font-size-jumbo-fluid: max(var(--font-size-xs) + 7.5vw, var(--font-size-l));
+
+/* ## Spacing */
+/* ========================================================================== */
+    --spacing-ratio: 2;
+
+    --spacing-xs: calc(var(--spacing-s) / var(--spacing-ratio));
+    --spacing-s: calc(var(--spacing-m) / var(--spacing-ratio));
+    --spacing-m: calc(1 * var(--line-height));
+    --spacing-l: calc(var(--spacing-m) * var(--spacing-ratio));
+    --spacing-xl: calc(var(--spacing-l) * var(--spacing-ratio));
+    --spacing-xxl: calc(var(--spacing-xl) * var(--spacing-ratio));
+
+    --content-max-width: 1200px;
+
+    --site-padding: max(var(--spacing-s), calc((100vw - var(--content-max-width)) / 2));
+    --main-nav-height: calc((var(--spacing-l) + var(--spacing-xl)) / 2);
+
+/* ## Animation timing */
+/* ========================================================================== */
+    --time-xs: 0.150s;
+    --time-s: 0.300s;
+    --time-m: 0.600s;
+    --time-l: 1.200s;
+    --time-xl: 2.400s;
+
+    --main-header-animation-range: calc(100svh - 1 * var(--main-nav-height)) calc(100svh - 0 * var(--main-nav-height));
+}

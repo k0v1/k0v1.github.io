@@ -1,0 +1,26 @@
+/* ========================================================================== */
+/* # FONT FACES */
+/* ========================================================================== */
+@font-face {
+  font-display: swap;
+  font-family: 'Gobe Display';
+  font-weight: 500;
+  src: url('../fonts/GobeDisplayMono.otf') format('opentype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 100 900;
+  src:
+    url('../fonts/Roboto-VariableFont_wdth\,wght.ttf') format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Roboto';
+  font-style: italic;
+  font-weight: 100 900;
+  src: url('../fonts/Roboto-Italic-VariableFont_wdth\,wght.ttf') format('truetype');
+}

@@ -1,0 +1,347 @@
+/* TODO Kellenének még reveal animációk egy csomó helyre ahol a hover miatt is használom a transformot. Ezekről beszéljünk, gondolom GSAP lesz majd az egész. */
+/* TODO Némelyik carousel slideon még nem vagyok elégedett a címsorok tördelésével, ezeket javítani fogom, esetleg rövidebb szöveg is segítene. */
+
+@import url("reset.css");
+@import url("fonts.css");
+@import url("tokens.css");
+@import url("general-styles.css");
+@import url("components.css");
+@import url("utilities.css");
+@import url("animations.css");
+
+/* ## Utilities
+/* ========================================================================== */
+.right-align { text-align: right; }
+
+.parallax-vertical {
+  animation-name: parallax-vertical;
+  animation-timeline: view(50vh 0);
+  animation-fill-mode: both;
+}
+
+@keyframes parallax-vertical {
+  from { transform: translateY(0); }
+  to { transform: translateY(calc(-1 * var(--spacing-xl))); }
+}
+
+/* ## Site navigation */
+/* ========================================================================== */
+
+
+/* ## Type animation
+/* ========================================================================== */
+.tiles {
+  padding-top: calc(100vw / 4.3);
+  overflow: clip;
+  h2 {
+    display: grid;
+    font-size: calc(100vw / 4.3);
+    grid-template-columns: repeat(5, 1fr);
+    justify-content: center;
+    line-height: 0.8em;
+    row-gap: 0.75rem;
+    /* TODO Itt bajlódtam az overflowval és a pozícionálással is, kicsit hacky az egész. */
+    span {
+      overflow: visible;
+      margin-right: var(--spacing-s);
+      padding-bottom: 1.75rem;
+      margin-bottom: -1.75rem;
+    }
+  }
+}
+
+.tiles > h2 > span {
+  animation-timeline: view(0% -50%);
+  /* Applying ease-out-in-sine to fake linear rotation of the visible edges. */
+  /* animation-timing-function: cubic-bezier(0.050, 0.445, 0.950, 0.550); */
+  animation-fill-mode: both;
+}
+
+@keyframes fake-mask-rotation-1 {
+  from { clip-path: polygon(200% 100%, 200% 100%, 0% 100%); transform: translateX(25%); }
+  to { clip-path: polygon(0% -100%, 200% 100%, 0% 100%); transform: translateX(0%);}
+}
+
+@keyframes fake-mask-rotation-2 {
+  from { clip-path: polygon(0% 200%, 0% 0%, 0% 200%); transform: translateY(25%); }
+  to { clip-path: polygon(200% 0%, 0% 0%, 0% 200%); transform: translateY(0%); }
+}
+
+@keyframes fake-mask-rotation-3 {
+  from { clip-path: polygon(-100% 0%, -100% 0%, 100% 0%); transform: translateX(-25%); }
+  to   { clip-path: polygon(100% 200%, -100% 0%, 100% 0%); transform: translateX(0%); }
+}
+
+@keyframes fake-mask-rotation-4 { 
+  from { clip-path: polygon(100% -100%, 100% -100%, 100% 100%); transform: translateY(-25%); }
+  to   { clip-path: polygon(-100% 100%, 100% -100%, 100% 100%); transform: translateY(0%); }
+}
+
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.tiles > h2 > span:nth-of-type(1n) { animation-name: fake-mask-rotation-1; }
+.tiles > h2 > span:nth-of-type(2n) { animation-name: fake-mask-rotation-2; }
+.tiles > h2 > span:nth-of-type(3n) { animation-name: fake-mask-rotation-3; }
+.tiles > h2 > span:nth-of-type(4n) { animation-name: fake-mask-rotation-4; }
+
+.tiles > h2 > span:nth-of-type( 1n) { animation-delay: 0.00s; }
+.tiles > h2 > span:nth-of-type( 2n) { animation-delay: 0.15s; }
+.tiles > h2 > span:nth-of-type( 3n) { animation-delay: 0.30s; }
+.tiles > h2 > span:nth-of-type( 4n) { animation-delay: 0.45s; }
+.tiles > h2 > span:nth-of-type( 5n) { animation-delay: 0.60s; }
+.tiles > h2 > span:nth-of-type( 6n) { animation-delay: 0.75s; }
+
+/* ## Events */
+/* ========================================================================== */
+.events {
+  .table {
+    display: grid;
+    gap: var(--spacing-s);
+    grid-template-columns: auto auto 1fr;
+    flex-direction: column;
+    margin-block: var(--spacing-l);
+    a { text-align: right; }
+    div {
+      p:nth-of-type(1) { font-family: var(--font-family-display); }
+      p:nth-of-type(2) { font-size: var(--font-size-xs); }
+    }
+  }
+}
+
+/* ## Music
+/* ========================================================================== */
+
+.music-grid {
+  display: grid;
+  gap: var(--spacing-s);
+  grid-template-columns: repeat(auto-fit, minmax(min(250px, calc(100vw - 2 * var(--site-padding))), 1fr));
+  margin-block: var(--spacing-l);
+  figure {
+    cursor: pointer;
+    display: grid;
+    mask-image: url(../img/vector-masks/mask-m-square.svg);
+    mask-size: 100% 100%;
+    overflow: hidden;
+    transition: all var(--time-s) ease-in-out;
+    img, figcaption {
+      grid-column: 1;
+      grid-row: 1;
+      width: 100%;
+    }
+    figcaption {
+      align-self: stretch;
+      background: linear-gradient(0deg, rgba(from var(--black) r g b / 0.75), rgba(from var(--black) r g b / 0));
+      color: var(--white);
+      display: grid;
+      opacity: 0;
+      padding: var(--spacing-xs);
+      transform: translateY(+25%);
+      transition: all var(--time-s) ease-in-out;
+      div { align-self: end; }
+    }
+  }
+}
+
+/* ## Shop
+/* ========================================================================== */
+.shop-grid {
+  display: grid;
+  gap: var(--spacing-s);
+  grid-template-columns: repeat(auto-fit, minmax(min(360px, calc(100vw - 2 * var(--site-padding))), 1fr));
+  margin-block: var(--spacing-l);
+  figure {
+    cursor: pointer;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    padding-block: var(--spacing-s);
+    transition: all var(--time-s) ease-in-out;
+    figcaption {
+      display: flex;
+      flex-direction: column;
+      margin-top: var(--spacing-s);
+      h4 {
+        transition: all var(--time-s) ease-in-out;
+      }
+    }
+    img {
+      aspect-ratio: 3 / 4;
+      mask-image: url(../img/vector-masks/mask-m-vertical.svg);
+      mask-size: 100% 100%;
+      object-fit: cover;
+    }
+  }
+}
+
+/* ## Closing
+/* ========================================================================== */
+.closing {
+  background-color: rgba(0, 0, 0, 0)!important;
+  img {
+    object-fit: cover;
+    object-position: center;
+    position: relative;
+    top: 54px;
+  }
+}
+
+/* ## Footer
+/* ========================================================================== */
+.footer {
+  background-color: var(--light-grey);
+  font-size: var(--font-size-xs);
+  padding: var(--spacing-xl) var(--site-padding) var(--spacing-xl) var(--site-padding);
+  div:first-of-type {
+    display: grid;
+    gap: var(--spacing-s);
+    grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));
+    article {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding: var(--spacing-s);
+      p:first-of-type {
+        justify-self: end;
+        font-weight: 600;
+        padding-right: var(--spacing-s);
+        width: max-content;
+      }
+      ul {
+        border-left: var(--black) 1px solid;
+        list-style-type: none;
+        padding-left: var(--spacing-s);
+        li {
+          width: max-content;
+        }
+      }
+    }
+  }
+  div:last-of-type {
+    display: flex;
+    gap: var(--spacing-s);
+    justify-content: center;
+    padding-block-start: var(--spacing-s);
+  }
+}
+
+/* ## Media queries */
+/* ========================================================================== */
+@media (max-width: 50rem) {
+
+  .hero {
+    .music { justify-content: end; }
+    .shop {background-position: center;}
+  }
+
+  .tiles {
+    padding-top: calc(100vw / 2.58);
+    overflow: clip;
+    h2 {
+      font-size: calc(100vw / 2.58);
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  #hamburger {
+    display: block;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    hyphens: manual;
+  }
+  
+  menu {
+    align-items: end;
+    flex-direction: column;
+    flex-shrink: 0;
+    font-size: 2rem;
+    height: 0;
+    line-height: 2.5rem;
+    overflow: hidden;
+    opacity: 1;
+    transition: all var(--time-s) ease-in-out;
+    width: 100%;
+  }
+  
+  .menu-show {
+    height: 100vh;
+    margin-top: var(--spacing-s);
+    opacity: 1;
+    transition: all var(--time-m) ease-in-out;
+  }
+  
+  body > nav {
+    transition: all var(--time-s) ease-in-out;
+  }
+  
+  .nav-open {
+    backdrop-filter: blur(2rem);
+    transition: all var(--time-m) ease-in-out;
+  }
+
+}
+
+@media (hover: hover) {
+  a,
+  a:active,
+  a:visited {
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  .button-primary {
+    &:hover {
+      background-color: color-mix(in hsl, var(--teal), black var(--darken-percentage, 10%));
+      text-decoration: none!important;
+    }
+  }
+  .main-header {
+    nav {
+      menu {
+        li {
+          a {
+            &:hover {
+              color: var(--teal);
+              text-decoration: none;
+            }
+          }
+        }
+      }
+    }
+  }
+  .shop-grid {
+    figure {
+      &:hover {
+        figcaption > h4 {
+          color: var(--teal);
+        }
+      }
+    }
+    &:has(figure:hover) {
+      figure:not(:hover) {
+        filter: saturate(0);
+        opacity: 0.5;
+        transform: scale(0.85);
+      }
+    }
+  }
+  .music-grid {
+    &:has(figure:hover) {
+      figure:not(:hover) {
+        filter: saturate(0);
+        opacity: 0.25;
+        transform: scale(0.85);
+        figcaption {
+          opacity: 0;
+        }
+      }
+      figure:hover {
+        figcaption {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    }
+  }
+}
