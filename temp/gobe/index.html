@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Góbé</title>
-  <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Góbé</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
 
-  <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
-</head>
+    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
+  </head>
 
-<html>
   <body>
 
     <!-- NAV -->
@@ -33,11 +32,11 @@
         </a>
         <button id="hamburger"><span></span></button>
         <menu class="gobe-site-header-nav-menu">
-          <li><a class="button-menu" href="events.html">Koncertek</a></li>
-          <li><a class="button-menu" href="music.html">Zene</a></li>
-          <li><a class="button-menu" href="shop.html">Shop</a></li>
-          <li><a class="button-menu" href="about.html">Rólunk</a></li>
-          <li><a class="button-menu" href="contact.html">Kapcsolat</a></li>
+          <li><a class="gobe-button-menu" href="events.html">Koncertek</a></li>
+          <li><a class="gobe-button-menu" href="music.html">Zene</a></li>
+          <li><a class="gobe-button-menu" href="shop.html">Shop</a></li>
+          <li><a class="gobe-button-menu" href="about.html">Rólunk</a></li>
+          <li><a class="gobe-button-menu" href="contact.html">Kapcsolat</a></li>
         </menu>
       </nav>
     </header>
@@ -59,25 +58,25 @@
       <div class="gobe-section-hero-cell gobe-section-hero-cell-events">
         <h2>Itt hall&shy;hatsz <br> min&shy;ket élő&shy;ben</h2>
         <div>
-          <a class="button-primary" href="events.html">Közelgő koncertek</a>
+          <a class="gobe-button-primary" href="events.html">Közelgő koncertek</a>
         </div>
       </div>
       <div class="gobe-section-hero-cell gobe-section-hero-cell-music">
         <h2>In&shy;dul&shy;hat <br> a ze&shy;ne</h2>
         <div>
-          <a class="button-primary" href="music.html">Hallgass bele!</a>
+          <a class="gobe-button-primary" href="music.html">Hallgass bele!</a>
         </div>
       </div>
       <div class="gobe-section-hero-cell gobe-section-hero-cell-shop">
         <h2>Vidd ha&shy;za a Gó&shy;bé-él&shy;ményt!</h2>  
         <div>
-          <a class="button-primary" href="shop.html">Szerezd be otthonra</a>
+          <a class="gobe-button-primary" href="shop.html">Szerezd be otthonra</a>
         </div>
       </div>
     </section>
 
     <!-- EVENTS -->
-    <section class="gobe-section tiles full-width">
+    <section class="gobe-section gobe-tiles full-width">
       <h2>
         <span>K</span>
         <span>o</span>
@@ -90,51 +89,51 @@
         <span>k</span>
       </h2>
     </section>
-    <section class="gobe-section events parallax-vertical">
+    <section class="gobe-section gobe-events">
       <div class="gobe-section-header">
         <div>
           <h2>Közelgő koncertek</h2>
           <p class="gobe-paragraph-narrow">“Ez még jobb, mint a lemezen” - kapjuk meg sokszor. És mi tagadás… így van! Gyere, és győződj meg róla te is!</p>
         </div>
         <div class="gobe-section-cta-wrapper">
-          <a class="button-primary" href="events.html">További koncertek</a>
+          <a class="gobe-button-primary" href="events.html">További koncertek</a>
         </div>
       </div>
 
-      <div class="table">
+      <div class="gobe-events-table">
 
         <p>2025/10/04</p>
         <div>
-          <p>Peter's terasz</p>
-          <p>Balatonakarattya</p>
+          <p class="gobe-event-venue">Peter's terasz</p>
+          <p class="gobe-event-city">Balatonakarattya</p>
         </div>
         <div class="right-align">
-          <a class="button-secondary" href="#">Jegyvásárlás</a>
+          <a class="button-secondary .right-align" href="#">Jegyvásárlás</a>
         </div>
         
         <p>2025/10/17</p>
         <div>
-          <p>Akvárium</p>
-          <p>Budapest</p>
+          <p class="gobe-event-venue">Akvárium</p>
+          <p class="gobe-event-city">Budapest</p>
         </div>
         <div class="right-align">
-          <a class="button-secondary" href="#">Jegyvásárlás</a>
+          <a class="button-secondary .right-align" href="#">Jegyvásárlás</a>
         </div>
 
         <p>2025/10/18</p>
         <div>
-          <p>Akvárium</p>
-          <p>Budapest</p>
+          <p class="gobe-event-venue">Akvárium</p>
+          <p class="gobe-event-city">Budapest</p>
         </div>
         <div class="right-align">
-          <a class="button-secondary" href="#">Jegyvásárlás</a>
+          <a class="button-secondary .right-align" href="#">Jegyvásárlás</a>
         </div>
 
       </div>
     </section>
 
     <!-- MUSIC -->
-    <section class="gobe-section music" style="padding-top: 0;"> <!-- TODO Parallax miatti eltolódás kompenzálom -->
+    <section class="gobe-section music">
       <div class="gobe-section-header">
         <div>
           <h2>Góbé zenék</h2>
@@ -142,11 +141,11 @@
           <p class="gobe-paragraph-narrow">A dalírás egy örök folyamat, a dal megjelenése csak egy “fénykép”. Hallgasd meg, melyek a legújabb dalok, amiket megmutattunk a világnak, vagy keresgélj a régebbi Góbé anyagok között!</p>
         </div>
         <div class="gobe-section-cta-wrapper">
-          <a class="button-primary" href="music.html">Indulhat a zene!</a>
+          <a class="gobe-button-primary" href="music.html">Indulhat a zene!</a>
         </div>
       </div>
-      <article class="music-grid">
-        <figure class="gobe">
+      <article class="gobe-music-grid">
+        <figure class="gobe-music-grid-item">
           <img src="img/music/gobe.jpg" alt="">
           <figcaption>
             <div>
@@ -155,7 +154,7 @@
             </div>
           </figcaption>
         </figure>
-        <figure class="ez_van">
+        <figure class="gobe-music-grid-item">
           <img src="img/music/ez_van.jpg" alt="">
           <figcaption>
             <div>
@@ -164,7 +163,7 @@
             </div>
           </figcaption>
         </figure>
-        <figure class="zeng">
+        <figure class="gobe-music-grid-item">
           <img src="img/music/zeng.jpg" alt="">
           <figcaption>
             <div>
@@ -173,7 +172,7 @@
             </div>
           </figcaption>
         </figure>
-        <figure class="forras">
+        <figure class="gobe-music-grid-item">
           <img src="img/music/forras.jpg" alt="">
           <figcaption>
             <div>
@@ -186,7 +185,7 @@
       <hr>
     </section>
 
-    <section class="gobe-section tiles full-width">
+    <section class="gobe-section gobe-tiles full-width">
       <h2>
         <span>G</span>
         <span>ó</span>
@@ -201,33 +200,33 @@
     </section>
 
     <!-- SHOP -->
-    <section class="gobe-section shop parallax-vertical" style="padding-bottom: 0;"> <!-- TODO Parallax miatti eltolódás kompenzálom -->
-      <div class="gobe-section-header" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--spacing-m);">
+    <section class="gobe-section"> <!-- TODO Parallax miatti eltolódás kompenzálom -->
+      <div class="gobe-section-header">
         <div>
           <h2>Góbé Shop</h2>
           <h3>Merch, amit hazavihetsz</h3>
           <p class="gobe-paragraph-narrow">A koncertre járás mellett a merch vásárlás a legjobb módja, hogy támogasd kedvenceidet. Válogass kedvedre, és időnként nézz vissza a Góbé boltjába, mert mindig készülünk újdonságokkal!</p>
         </div>
         <div class="gobe-section-cta-wrapper">
-          <a class="button-primary" href="shop.html">Irány a shop</a>
+          <a class="gobe-button-primary" href="shop.html">Irány a shop</a>
         </div>
       </div>
-      <article class="shop-grid">
-        <figure class="shop-item">
+      <article class="gobe-shop-grid">
+        <figure class="gobe-shop-grid-item">
           <img src="img/shop/shades.jpg" alt="Góbé napszemüveg" style="object-position: center left;">
           <figcaption>
             <h4>Góbé napszemüveg</h4>
             <span class="shop-item-pricetag">3000 Ft</span>
           </figcaption>
         </figure>
-        <figure class="shop-item">
+        <figure class="gobe-shop-grid-item">
           <img src="img/shop/tote.jpg" alt="Góbé vászonzsák">
           <figcaption>
             <h4>Góbé vászonzsák</h4>
             <span class="shop-item-pricetag">3000 Ft</span>
           </figcaption>
         </figure>
-        <figure class="shop-item">
+        <figure class="gobe-shop-grid-item">
           <img src="img/shop/beanie.jpg" alt="Góbé beanie" style="object-position: center right;">
           <figcaption>
             <h4>Góbé beanie</h4>
@@ -238,32 +237,32 @@
       <hr>
     </section>
 
-    <section class="gobe-section closing full-width">
+    <section class="gobe-section gobe-footer-photo full-width">
       <img src="img/gobe_terem.png" alt="Jól szétvannak a srácok">
     </section>
 
     <!-- FOOTER -->
-    <footer class="footer" id="footer">
-      <div>
-        <article>
-          <p>Szervezői kontaktok</p>
-          <ul class="footer-contacts">
+    <footer class="gobe-footer" id="footer">
+      <div class="gobe-footer-row">
+        <article class="gobe-footer-column">
+          <p class="gobe-footer-column-title">Szervezői kontaktok</p>
+          <ul class="gobe-footer-contacts">
             <li>Név: <i>Titokzatos Valaki</i></li>
             <li>Telefon: <i>még titokzatosabb</i></li>
             <li>E-mail: <i>ez meg pláne</i></li>
           </ul>
         </article>
-        <article>
-          <p>Sajtós kontakt</p>
-          <ul class="footer-contacts">
+        <article class="gobe-footer-column">
+          <p class="gobe-footer-column-title">Sajtós kontakt</p>
+          <ul class="gobe-footer-contacts">
             <li>Név: <i>Titokzatos Valaki</i></li>
             <li>Telefon: <i>még titokzatosabb</i></li>
             <li>E-mail: <i>ez meg pláne</i></li>
           </ul>
         </article>
-        <article>
-          <p>Közösségi média</p>
-          <ul class="footer-icons">
+        <article class="gobe-footer-column">
+          <p class="gobe-footer-column-title">Közösségi média</p>
+          <ul class="gobe-footer-contacts">
             <li>Név: <i>Titokzatos Valaki</i></li>
             <li>Telefon: <i>még titokzatosabb</i></li>
             <li>E-mail: <i>ez meg pláne</i></li>
@@ -271,7 +270,7 @@
         </article>
       </div>
       <hr>
-      <div class="grid-col-span-3">
+      <div class="gobe-footer-copyright">
         <p>© 2025 Góbé</p>
         <a href="#">Adatkezelési tájékoztató</a>
       </div>

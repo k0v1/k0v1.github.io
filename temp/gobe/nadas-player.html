@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="hu">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Interaktív Klip — Optimalizált Player</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="./css/nadas-player.css">
+  </head>
+  <body>
+
+    <section class="gobe-section gobe-player-section full-width">
+      <div class="player" role="application" aria-label="Interaktív videó player">
+        <audio id="bgAudio" preload="metadata" src="./audio/gobe_nadas_trim.mp3"></audio>
+        <video id="baseVideo" preload="metadata" src="./vid/00_konyha_crushed.mp4" muted></video>
+        <!-- <img src="./img/nadas-player/vid.png" alt="klip" class="video-substitute"> -->
+
+        <!-- overlayVideo: csak src-t cserélünk; megjelenítést a canplay eseményre kötjük -->
+        <video id="overlayVideo" preload="metadata" aria-hidden="true"></video>
+
+        <div id="cornerLabel" class="cornerLabel" aria-hidden="true"></div>
+
+        <div id="playButton" class="playButton" title="Lejátszás" role="button" aria-pressed="false">▶</div>
+
+        <!-- <button id="hamb" aria-controls="menu" aria-expanded="false" title="Jelenetek">☰</button> -->
+        <button id="hamb" aria-controls="menu" aria-expanded="false" title="Jelenetek"><span></span></button>
+
+        <div id="menu" role="menu" aria-hidden="true">
+          <div class="sceneItem" data-scene="cigi" data-src="./vid/01_asztalnal_iszogatas.mp4" role="menuitem">Asztalnál iszogatás</div>
+          <div class="sceneItem" data-scene="tanc" data-src="./vid/02_tanci_citera.mp4" role="menuitem">Tánci, citera</div>
+          <div class="sceneItem" data-scene="dj" data-src="./vid/03_tanci_lufi.mp4" role="menuitem">Tánci, lufi</div>
+          <div class="sceneItem" data-scene="cigi" data-src="./vid/01_asztalnal_iszogatas.mp4" role="menuitem">Asztalnál iszogatás</div>
+          <div class="sceneItem" data-scene="tanc" data-src="./vid/02_tanci_citera.mp4" role="menuitem">Tánci, citera</div>
+          <div class="sceneItem" data-scene="dj" data-src="./vid/03_tanci_lufi.mp4" role="menuitem">Tánci, lufi</div>
+          <div class="sceneItem" data-scene="cigi" data-src="./vid/01_asztalnal_iszogatas.mp4" role="menuitem">Asztalnál iszogatás</div>
+          <div class="sceneItem" data-scene="tanc" data-src="./vid/02_tanci_citera.mp4" role="menuitem">Tánci, citera</div>
+          <div class="sceneItem" data-scene="dj" data-src="./vid/03_tanci_lufi.mp4" role="menuitem">Tánci, lufi</div>
+          <div class="sceneItem" data-scene="cigi" data-src="./vid/01_asztalnal_iszogatas.mp4" role="menuitem">Asztalnál iszogatás</div>
+          <div class="sceneItem" data-scene="tanc" data-src="./vid/02_tanci_citera.mp4" role="menuitem">Tánci, citera</div>
+          <div class="sceneItem" data-scene="dj" data-src="./vid/03_tanci_lufi.mp4" role="menuitem">Tánci, lufi</div>
+          <div class="sceneItem" data-scene="cigi" data-src="./vid/01_asztalnal_iszogatas.mp4" role="menuitem">Asztalnál iszogatás</div>
+          <div class="sceneItem" data-scene="tanc" data-src="./vid/02_tanci_citera.mp4" role="menuitem">Tánci, citera</div>
+          <div class="sceneItem" data-scene="dj" data-src="./vid/03_tanci_lufi.mp4" role="menuitem">Tánci, lufi</div>
+          <div class="sceneItem" data-scene="cigi" data-src="./vid/01_asztalnal_iszogatas.mp4" role="menuitem">Asztalnál iszogatás</div>
+          <div class="sceneItem" data-scene="tanc" data-src="./vid/02_tanci_citera.mp4" role="menuitem">Tánci, citera</div>
+          <div class="sceneItem" data-scene="dj" data-src="./vid/03_tanci_lufi.mp4" role="menuitem">Tánci, lufi</div>
+          <div class="sceneItem" data-scene="cigi" data-src="./vid/01_asztalnal_iszogatas.mp4" role="menuitem">Asztalnál iszogatás</div>
+          <div class="sceneItem" data-scene="tanc" data-src="./vid/02_tanci_citera.mp4" role="menuitem">Tánci, citera</div>
+          <div class="sceneItem" data-scene="dj" data-src="./vid/03_tanci_lufi.mp4" role="menuitem">Tánci, lufi</div>
+          <div class="sceneItem" data-scene="cigi" data-src="./vid/01_asztalnal_iszogatas.mp4" role="menuitem">Asztalnál iszogatás</div>
+          <div class="sceneItem" data-scene="tanc" data-src="./vid/02_tanci_citera.mp4" role="menuitem">Tánci, citera</div>
+          <div class="sceneItem" data-scene="dj" data-src="./vid/03_tanci_lufi.mp4" role="menuitem">Tánci, lufi</div>
+        </div>
+
+        <div id="progressBarContainer"><div id="progressBar" aria-hidden="true"></div></div>
+
+        <div class="linkBox" id="linkBox" aria-live="polite">
+          <input id="generatedLink" readonly aria-label="Megosztható link">
+          <button id="copyBtn" class="gobe-button-secondary">Másol</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- EVENTS -->
+    <section class="gobe-section gobe-events">
+      <div class="gobe-section-header">
+        <div>
+          <h2>Közelgő koncertek</h2>
+          <p class="gobe-paragraph-narrow">“Ez még jobb, mint a lemezen” - kapjuk meg sokszor. És mi tagadás… így van! Gyere, és győződj meg róla te is!</p>
+        </div>
+        <div class="gobe-section-cta-wrapper">
+          <a class="gobe-button-primary" href="events.html">További koncertek</a>
+        </div>
+      </div>
+
+      <div class="gobe-events-table">
+
+        <p>2025/10/04</p>
+        <div>
+          <p class="gobe-event-venue">Peter's terasz</p>
+          <p class="gobe-event-city">Balatonakarattya</p>
+        </div>
+        <div class="right-align">
+          <a class="button-secondary .right-align" href="#">Jegyvásárlás</a>
+        </div>
+        
+        <p>2025/10/17</p>
+        <div>
+          <p class="gobe-event-venue">Akvárium</p>
+          <p class="gobe-event-city">Budapest</p>
+        </div>
+        <div class="right-align">
+          <a class="button-secondary .right-align" href="#">Jegyvásárlás</a>
+        </div>
+
+        <p>2025/10/18</p>
+        <div>
+          <p class="gobe-event-venue">Akvárium</p>
+          <p class="gobe-event-city">Budapest</p>
+        </div>
+        <div class="right-align">
+          <a class="button-secondary .right-align" href="#">Jegyvásárlás</a>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="gobe-section gobe-tiles full-width">
+      <h2>
+        <span>G</span>
+        <span>ó</span>
+        <span>b</span>
+        <span>é</span>
+        <span>&nbsp</span>
+        <span>s</span>
+        <span>h</span>
+        <span>o</span>
+        <span>p</span>
+      </h2>
+    </section>
+
+    <!-- SHOP -->
+    <section class="gobe-section"> <!-- TODO Parallax miatti eltolódás kompenzálom -->
+      <div class="gobe-section-header">
+        <div>
+          <h2>Góbé Shop</h2>
+          <h3>Merch, amit hazavihetsz</h3>
+          <p class="gobe-paragraph-narrow">A koncertre járás mellett a merch vásárlás a legjobb módja, hogy támogasd kedvenceidet. Válogass kedvedre, és időnként nézz vissza a Góbé boltjába, mert mindig készülünk újdonságokkal!</p>
+        </div>
+        <div class="gobe-section-cta-wrapper">
+          <a class="gobe-button-primary" href="shop.html">Irány a shop</a>
+        </div>
+      </div>
+      <article class="gobe-shop-grid">
+        <figure class="gobe-shop-grid-item">
+          <img src="img/shop/shades.jpg" alt="Góbé napszemüveg" style="object-position: center left;">
+          <figcaption>
+            <h4>Góbé napszemüveg</h4>
+            <span class="shop-item-pricetag">3000 Ft</span>
+          </figcaption>
+        </figure>
+        <figure class="gobe-shop-grid-item">
+          <img src="img/shop/tote.jpg" alt="Góbé vászonzsák">
+          <figcaption>
+            <h4>Góbé vászonzsák</h4>
+            <span class="shop-item-pricetag">3000 Ft</span>
+          </figcaption>
+        </figure>
+        <figure class="gobe-shop-grid-item">
+          <img src="img/shop/beanie.jpg" alt="Góbé beanie" style="object-position: center right;">
+          <figcaption>
+            <h4>Góbé beanie</h4>
+            <span class="shop-item-pricetag">3000 Ft</span>
+          </figcaption>
+        </figure>
+      </article>
+      <hr>
+    </section>
+
+    <section class="gobe-section gobe-footer-photo full-width">
+      <img src="img/gobe_terem.png" alt="Jól szétvannak a srácok">
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="gobe-footer" id="footer">
+      <div class="gobe-footer-row">
+        <article class="gobe-footer-column">
+          <p class="gobe-footer-column-title">Szervezői kontaktok</p>
+          <ul class="gobe-footer-contacts">
+            <li>Név: <i>Titokzatos Valaki</i></li>
+            <li>Telefon: <i>még titokzatosabb</i></li>
+            <li>E-mail: <i>ez meg pláne</i></li>
+          </ul>
+        </article>
+        <article class="gobe-footer-column">
+          <p class="gobe-footer-column-title">Sajtós kontakt</p>
+          <ul class="gobe-footer-contacts">
+            <li>Név: <i>Titokzatos Valaki</i></li>
+            <li>Telefon: <i>még titokzatosabb</i></li>
+            <li>E-mail: <i>ez meg pláne</i></li>
+          </ul>
+        </article>
+        <article class="gobe-footer-column">
+          <p class="gobe-footer-column-title">Közösségi média</p>
+          <ul class="gobe-footer-contacts">
+            <li>Név: <i>Titokzatos Valaki</i></li>
+            <li>Telefon: <i>még titokzatosabb</i></li>
+            <li>E-mail: <i>ez meg pláne</i></li>
+          </ul>
+        </article>
+      </div>
+      <hr>
+      <div class="gobe-footer-copyright">
+        <p>© 2025 Góbé</p>
+        <a href="#">Adatkezelési tájékoztató</a>
+      </div>
+    </footer>
+
+    <script src="./js/nadas-player.js">
+
+    </script>
+
+  </body>
+</html>

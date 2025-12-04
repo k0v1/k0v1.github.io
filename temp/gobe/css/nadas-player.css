@@ -1,0 +1,257 @@
+/* ========================================================================== */
+/* # Tokens */
+/* ========================================================================== */
+:root {
+  --video-transition: 1s ease-in;
+}
+
+
+/* ========================================================================== */
+/* # Alap layout */
+/* ========================================================================== */
+.gobe-player-section {
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  min-height: 100svh;
+}
+
+.player {
+  position: relative;
+  height: 75svh;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+}
+
+
+/* ========================================================================== */
+/* # Videók */
+/* ========================================================================== */
+video {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  position: absolute; 
+  width: 100%;
+}
+
+#overlayVideo {
+  opacity: 0;
+  transition: opacity var(--video-transition);
+  pointer-events: none;
+}
+
+#overlayVideo.show { opacity: 1; }
+
+
+/* ========================================================================== */
+/* # Play button */
+/* ========================================================================== */
+.playButton {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  color:var(--white);
+  font-size: var(--font-size-jumbo);
+  cursor: pointer;
+  z-index: 30;
+  transition: transform var(--time-xs) ease-out;
+  user-select: none;
+}
+
+.playButton::after {
+  filter: blur(0.125em);
+  color: var(--black);
+  content: "▶";
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+/* ========================================================================== */
+/* # Hamburger + menu */
+/* ========================================================================== */
+#hamb {
+  position: absolute;
+  top: var(--spacing-m);
+  right: var(--spacing-m);
+  z-index: 25;
+  display: none;
+  background-color: transparent;
+  border: none;
+  color: var(--white);
+  cursor: pointer;
+  font-size: var(--font-size-s);
+  line-height: 0.95;
+  text-align: center;
+  text-decoration: none;
+}
+
+#hamburger > span,
+#hamb > span {
+  --icon-stroke-width: 2px;
+  --icon-size: var(--font-size-s);
+  
+  --icon-point-coordinate-a: calc(15% - 0.5 * var(--icon-stroke-width)); /*  5 */
+  --icon-point-coordinate-b: calc(15% + 0.5 * var(--icon-stroke-width)); /* 25 */
+  --icon-point-coordinate-c: calc(50% - 0.5 * var(--icon-stroke-width)); /* 40 */
+  --icon-point-coordinate-d: calc(50% + 0.5 * var(--icon-stroke-width)); /* 60 */
+  --icon-point-coordinate-e: calc(85% - 0.5 * var(--icon-stroke-width)); /* 75 */
+  --icon-point-coordinate-f: calc(85% + 0.5 * var(--icon-stroke-width)); /* 95 */
+  
+  background-color: var(--white);
+  clip-path: polygon(0% var(--icon-point-coordinate-a),100% var(--icon-point-coordinate-a),100% var(--icon-point-coordinate-b),0% var(--icon-point-coordinate-b),0% var(--icon-point-coordinate-c),100% var(--icon-point-coordinate-c),100% var(--icon-point-coordinate-d),0% var(--icon-point-coordinate-d),0% var(--icon-point-coordinate-e),100% var(--icon-point-coordinate-e),100% var(--icon-point-coordinate-f),0% var(--icon-point-coordinate-f));
+  display: block;
+  width: var(--icon-size);
+  height: var(--icon-size);
+}
+
+#menu {
+  position: absolute;
+  top: calc(var(--spacing-l) + var(--spacing-s)); /* TODO Get rid of absolute positioning pls. */
+  right: var(--spacing-s);
+  display: flex;
+  flex-direction: column;
+  gap:var(--spacing-xs);
+  padding: var(--spacing-s);
+  z-index: 24;
+  background-color: var(--black);
+  mask-image: url(../img/vector-masks/mask-m-vertical.svg);
+  mask-size: 100% 100%;
+  height: calc(100% - 6 * var(--spacing-m)); /* TODO wtf? */
+  overflow: auto;
+  opacity: 0;
+  width: calc(2 * var(--spacing-xxl));
+  box-sizing: border-box;
+  clip-path: inset(0% 0% 100% 50%);
+  scrollbar-color: var(--white) transparent;
+  transition:
+    opacity var(--time-m) ease-out,
+    clip-path var(--time-xs) ease-out
+  ;
+  z-index: 570;
+}
+
+#menu.show { 
+  clip-path: inset(0% 0% 0% 0%);
+  opacity: 1;
+}
+
+.sceneItem {
+  color: var(--white);
+  cursor: pointer;
+  margin-block: var(--spacing-xs);
+  padding-inline: var(--spacing-xs);
+  text-decoration: none;
+}
+
+.sceneItem.played{
+  color: var(--dark-grey);
+  cursor: default;
+}
+
+/* ========================================================================== */
+/* # Corner label - fade */
+/* ========================================================================== */
+.cornerLabel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 26;
+
+  color: var(--white);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-l);
+  text-align: center;
+  text-wrap: pretty;
+
+  opacity: 0;
+  transition: opacity var(--time-s) ease-out;
+  pointer-events: none;
+  width: 75%;
+}
+
+.cornerLabel.show {
+  opacity: 1;
+  display: block;
+}
+
+/* ========================================================================== */
+/* # Progress */
+/* ========================================================================== */
+#progressBarContainer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: hsl(from var(--white) h s l / 0.125);
+  z-index: 22;
+}
+
+#progressBar {
+  height: 100%;
+  width: 0%;
+  background: var(--teal);
+}
+
+/* ========================================================================== */
+/* # Link box */
+/* ========================================================================== */
+.linkBox {
+  position: absolute;
+  bottom: var(--spacing-s);
+  right: var(--spacing-s);
+  z-index: 26;
+  display: none;
+  gap: var(--spacing-xs);
+  align-items: center;
+  padding: var(--spacing-s);
+  background-color: var(--black);
+  mask-image: url(../img/vector-masks/mask-s-horizontal.svg);
+  mask-size: 100% 100%;
+  width: calc(2 * var(--spacing-xxl));
+}
+
+.linkBox input {
+  padding: var(--spacing-xs);
+  /* border-radius: var(--spacing-xs); */
+  border: 1px solid var(--dark-grey);
+  background: var(--black);
+  color:var(--white);
+  width: 100%;
+}
+
+/* ========================================================================== */
+/* # Responsive tweaks */
+/* ========================================================================== */
+@media (max-width:520px) /* TODO get rid of this if possible */ {
+  #menu { right:12px; left:12px; width:auto; top:68px; }
+  .linkBox input { width:160px; }
+}
+
+@media (max-aspect-ratio: 4/3) {
+  .player {
+    height: unset;
+    width: 100%;
+  }
+}
+
+@media (hover: hover) {
+
+  .playButton:hover{
+    transform: translate(-50%,-50%) scale(1.0625);
+  }
+
+  .sceneItem:hover {
+    text-decoration: underline;
+  }
+
+  .sceneItem.played:hover {
+    text-decoration: none;
+  }
+
+}

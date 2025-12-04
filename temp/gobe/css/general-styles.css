@@ -20,7 +20,7 @@ i {
   font-style: italic;
 }
 
-h1, h2, h3, h4, h5, h6 { font-weight: 500; }
+h1, h2, h3, h4, h5, h6 { font-weight: 500; text-wrap: pretty; }
 
 h1, h2  { font-family: var(--font-family-display); }
 
@@ -36,4 +36,34 @@ a:active,
 a:visited {
   color: var(--teal);
   text-decoration: none;
+}
+
+hr {
+  border-top: var(--black) 0.25px solid;
+  border-bottom: none;
+  margin-block: var(--spacing-m) var(--spacing-m);
+  margin-inline: var(--spacing-xl);
+}
+
+/* ========================================================================== */
+/* # Media queries */
+/* ========================================================================== */
+
+@media (max-width: 50rem) {
+
+  h1, h2, h3, h4, h5, h6 {
+    hyphens: manual;
+  }
+
+}
+
+@media (hover: hover) {
+  a,
+  a:active,
+  a:visited {
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
 }
