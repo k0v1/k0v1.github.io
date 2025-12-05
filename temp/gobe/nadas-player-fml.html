@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="hu">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Interaktív Klip — Optimalizált Player</title>
+    <link rel="stylesheet" href="css/main.css">
+    <!-- <link rel="stylesheet" href="./css/nadas-player.css"> -->
+    <style>
+      /* ========================================================================== */
+      /* # Tokens */
+      /* ========================================================================== */
+      :root {
+        --video-transition: 1s ease-in;
+      }
+
+
+      /* ========================================================================== */
+      /* # Alap layout */
+      /* ========================================================================== */
+      .gobe-player-section {
+        display: grid;
+        align-items: center;
+        justify-items: center;
+        min-height: min(100svh, 150vw);
+      }
+
+      .player {
+        position: relative;
+        height: 90svh;
+        aspect-ratio: 4/3;
+        overflow: hidden;
+      }
+
+
+      /* ========================================================================== */
+      /* # Videók */
+      /* ========================================================================== */
+      video {
+        display: block;
+        height: 100%;
+        object-fit: cover;
+        position: absolute; 
+        width: 100%;
+      }
+
+      #overlayVideo {
+        opacity: 0;
+        transition: opacity var(--video-transition);
+        pointer-events: none;
+      }
+
+      #overlayVideo.show { opacity: 1; }
+
+      #overlayVideo.fading {
+        opacity: 0;
+        transition: opacity 1s;
+      }
+
+
+      /* ========================================================================== */
+      /* # Play button */
+      /* ========================================================================== */
+      .playButton {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%,-50%);
+        color:var(--white);
+        font-size: var(--font-size-jumbo);
+        cursor: pointer;
+        z-index: 30;
+        transition: transform var(--time-xs) ease-out;
+        user-select: none;
+      }
+
+      .playButton::after {
+        filter: blur(0.125em);
+        color: var(--black);
+        content: "▶";
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+      }
+
+      /* ========================================================================== */
+      /* # Hamburger + menu */
+      /* ========================================================================== */
+      #hamb {
+        position: absolute;
+        top: var(--spacing-m);
+        right: var(--spacing-m);
+        z-index: 25;
+        display: none;
+        background-color: transparent;
+        border: none;
+        color: var(--white);
+        cursor: pointer;
+        font-size: var(--font-size-s);
+        line-height: 0.95;
+        text-align: center;
+        text-decoration: none;
+      }
+
+      #hamburger > span,
+      #hamb > span {
+        --icon-stroke-width: 2px;
+        --icon-size: var(--font-size-s);
+        
+        --icon-point-coordinate-a: calc(15% - 0.5 * var(--icon-stroke-width)); /*  5 */
+        --icon-point-coordinate-b: calc(15% + 0.5 * var(--icon-stroke-width)); /* 25 */
+        --icon-point-coordinate-c: calc(50% - 0.5 * var(--icon-stroke-width)); /* 40 */
+        --icon-point-coordinate-d: calc(50% + 0.5 * var(--icon-stroke-width)); /* 60 */
+        --icon-point-coordinate-e: calc(85% - 0.5 * var(--icon-stroke-width)); /* 75 */
+        --icon-point-coordinate-f: calc(85% + 0.5 * var(--icon-stroke-width)); /* 95 */
+        
+        background-color: var(--white);
+        clip-path: polygon(0% var(--icon-point-coordinate-a),100% var(--icon-point-coordinate-a),100% var(--icon-point-coordinate-b),0% var(--icon-point-coordinate-b),0% var(--icon-point-coordinate-c),100% var(--icon-point-coordinate-c),100% var(--icon-point-coordinate-d),0% var(--icon-point-coordinate-d),0% var(--icon-point-coordinate-e),100% var(--icon-point-coordinate-e),100% var(--icon-point-coordinate-f),0% var(--icon-point-coordinate-f));
+        display: block;
+        width: var(--icon-size);
+        height: var(--icon-size);
+      }
+
+      #menu {
+        position: absolute;
+        top: calc(var(--spacing-l) + var(--spacing-s)); /* TODO Get rid of absolute positioning pls. */
+        right: var(--spacing-s);
+        display: flex;
+        flex-direction: column;
+        gap:var(--spacing-xs);
+        padding: var(--spacing-s);
+        z-index: 24;
+        background-color: var(--black);
+        /* mask-image: url(https://gobeband.com/wp-content/uploads/2025/12/mask-m-vertical.svg); */
+        /* mask-size: 100% 100%; */
+        height: calc(100% - 4 * var(--spacing-m));
+        overflow-x: scroll;
+        opacity: 0;
+        width: calc(2 * var(--spacing-xxl));
+        box-sizing: border-box;
+        clip-path: inset(0% 0% 100% 50%);
+        scrollbar-color: var(--white) transparent;
+        transition:
+          opacity var(--time-m) ease-out,
+          clip-path var(--time-xs) ease-out
+        ;
+        z-index: 570;
+      }
+
+      #menu.show { 
+        clip-path: inset(0% 0% 0% 0%);
+        opacity: 1;
+      }
+
+      .sceneItem {
+        color: var(--white);
+        cursor: pointer;
+        margin-block: var(--spacing-xs);
+        padding-inline: var(--spacing-xs);
+        text-decoration: none;
+      }
+
+      .sceneItem.played{
+        color: var(--dark-grey);
+        cursor: default;
+      }
+
+      /* ========================================================================== */
+      /* # Corner label - fade */
+      /* ========================================================================== */
+      .cornerLabel {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 26;
+
+        color: var(--white);
+        font-family: var(--font-family-display);
+        font-size: var(--font-size-l);
+        text-align: center;
+        text-wrap: pretty;
+
+        opacity: 0;
+        transition: opacity var(--time-s) ease-out;
+        pointer-events: none;
+        width: 75%;
+      }
+
+      .cornerLabel.show {
+        opacity: 1;
+        display: block;
+      }
+
+      /* ========================================================================== */
+      /* # Progress */
+      /* ========================================================================== */
+      #progressBarContainer {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: hsl(from var(--white) h s l / 0.125);
+        z-index: 22;
+      }
+
+      #progressBar {
+        height: 100%;
+        width: 0%;
+        background: var(--white);
+      }
+
+      /* ========================================================================== */
+      /* # Link box */
+      /* ========================================================================== */
+      .linkBox {
+        position: absolute;
+        bottom: var(--spacing-s);
+        right: var(--spacing-s);
+        z-index: 26;
+        display: none;
+        gap: var(--spacing-xs);
+        align-items: center;
+        padding: var(--spacing-s);
+        background-color: var(--black);
+        /* mask-image: url(https://gobeband.com/wp-content/uploads/2025/12/mask-s-horizontal.svg); */
+        /* mask-size: 100% 100%; */
+        width: calc(2 * var(--spacing-xxl));
+      }
+
+      .linkBox input {
+        padding: var(--spacing-xs);
+        /* border-radius: var(--spacing-xs); */
+        border: 1px solid var(--dark-grey);
+        background: var(--black);
+        color:var(--white);
+        width: 100%;
+      }
+
+      /* ========================================================================== */
+      /* # Responsive tweaks */
+      /* ========================================================================== */
+      @media (max-width:520px) /* TODO get rid of this if possible */ {
+        .linkBox { width: calc(100% - 2* var(--spacing-s)); }
+      }
+
+      @media (max-aspect-ratio: 4/3) {
+        .player {
+          height: unset;
+          width: 100%;
+        }
+      }
+
+      @media (hover: hover) {
+
+        .playButton:hover{
+          transform: translate(-50%,-50%) scale(1.0625);
+        }
+
+        .sceneItem:hover {
+          text-decoration: underline;
+        }
+
+        .sceneItem.played:hover {
+          text-decoration: none;
+        }
+
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="player" role="application" aria-label="Interaktív videó player">
+      <audio id="bgAudio" preload="metadata" src="https://gobeband.com/wp-content/uploads/2025/12/gobe_nadas_trim.mp3"></audio>
+      <video id="baseVideo" preload="metadata" src="https://gobeband.com/wp-content/uploads/2025/12/00_konyha.mp4" muted></video>
+      <!-- <img src="./img/nadas-player/vid.png" alt="klip" class="video-substitute"> -->
+
+      <!-- overlayVideo: csak src-t cserélünk; megjelenítést a canplay eseményre kötjük -->
+      <video id="overlayVideo" preload="metadata" aria-hidden="true"></video>
+
+      <div id="cornerLabel" class="cornerLabel" aria-hidden="true"></div>
+
+      <div id="playButton" class="playButton" title="Lejátszás" role="button" aria-pressed="false">▶</div>
+
+      <!-- <button id="hamb" aria-controls="menu" aria-expanded="false" title="Jelenetek">☰</button> -->
+      <button id="hamb" aria-controls="menu" aria-expanded="false" title="Jelenetek"><span></span></button>
+
+      <div id="menu" role="menu" aria-hidden="true">
+        <div class="sceneItem" data-scene="koccintas" data-src="https://gobeband.com/wp-content/uploads/2025/12/01_asztalnal_iszogatas.mp4" role="menuitem">Koccintás</div>
+        <div class="sceneItem" data-scene="forgas" data-src="https://gobeband.com/wp-content/uploads/2025/12/13_forgas.mp4" role="menuitem">Forgás</div>
+        <div class="sceneItem" data-scene="lufiagy" data-src="https://gobeband.com/wp-content/uploads/2025/12/21_csajok_fetrengenek.mp4" role="menuitem">Lufiágy</div>
+        <div class="sceneItem" data-scene="mosdo" data-src="https://gobeband.com/wp-content/uploads/2025/12/25_pisi.mp4" role="menuitem">Mosdó</div>
+        <div class="sceneItem" data-scene="kigyo" data-src="https://gobeband.com/wp-content/uploads/2025/12/14_kigyo.mp4" role="menuitem">Kígyó</div>
+        <div class="sceneItem" data-scene="tancescitera" data-src="https://gobeband.com/wp-content/uploads/2025/12/02_tanci_citera_old.mp4" role="menuitem">Tánc (és citera)</div>
+        <div class="sceneItem" data-scene="kartonmatyi" data-src="https://gobeband.com/wp-content/uploads/2025/12/11_csajok_futkarozas.mp4">Karton Matyi és kondi</div>
+        <div class="sceneItem" data-scene="taneslufik" data-src="https://gobeband.com/wp-content/uploads/2025/12/03_tanci_lufi_old.mp4" role="menuitem">Tánc (és lufik)</div>
+        <div class="sceneItem" data-scene="parkour" data-src="https://gobeband.com/wp-content/uploads/2025/12/27_parkour.mp4" role="menuitem">Hardcore parkour</div>
+        <div class="sceneItem" data-scene="matyi" data-src="https://gobeband.com/wp-content/uploads/2025/12/19_matyi.mp4" role="menuitem">Matyi</div>
+        <div class="sceneItem" data-scene="kidolesek" data-src="https://gobeband.com/wp-content/uploads/2025/12/18_kidoles.mp4" role="menuitem">Kidőlés</div>
+        <div class="sceneItem" data-scene="legyott" data-src="https://gobeband.com/wp-content/uploads/2025/12/26_szex.mp4" role="menuitem">Légy ott</div>
+        <div class="sceneItem" data-scene="jovokmegyek" data-src="https://gobeband.com/wp-content/uploads/2025/12/28_jovok_megyek.mp4" role="menuitem">Jövök-megyek</div>
+      </div>
+
+      <div id="progressBarContainer"><div id="progressBar" aria-hidden="true"></div></div>
+
+      <div class="linkBox" id="linkBox" aria-live="polite">
+        <input id="generatedLink" readonly aria-label="Megosztható link">
+        <button id="copyBtn" class="gobe-button-secondary">Másol</button>
+      </div>
+    </div>
+
+    <script>
+
+      /* TODO */
+      /* 
+      Nem volt időm ezt rendesen átnyálazni, viszont 1-2 dolgot észrevettem:
+      - Az elején a cím is el kéne tűnjön pár másodperc után
+      - A jelenetek végére is kellene fade
+
+      Ami még szerintem jól jöhet:
+      - Fullscreen button
+      - Valami konszolidált play/pause button
+
+      Meg a landing még semmilyen formában nincsen kitalálva - erről te beszéltél Áronnal am?
+
+      */
+
+      /* ============================================================
+        Optimalizált, olvasható player
+        - javítások: oncanplay overlay, AV sync, timeupdate alapú logika,
+                      replay időalapú figyelés, menu scroll, iOS autoplay handling,
+                      copy fallback
+        - állapot a 'state' objektumban
+      ============================================================ */
+
+      (() => {
+        /* -------------------- Konfiguráció / paraméterek -------------------- */
+        const HIDE_START = 30;    // intro: menü ne jelenjen meg az elején (mp)
+        const HIDE_END = 30;     // outro: menü ne jelenjen meg a végén (mp)
+        const SYNC_DRIFT_THRESHOLD = 0.25; // mp, ha ennél nagyobb a drift, resync
+        const PROGRESS_UPDATE_MS = 250; // biztonsági fallback, de főként timeupdate-vel dolgozunk
+
+        /* -------------------- Állapot -------------------- */
+        const state = {
+          recording: false,
+          replayMode: false,
+          overlayActive: false,
+          recordedScenes: [],      // {scene, src, time}
+          playedScenes: new Set(),
+          pendingReplayIndex: 0,   // replay: index a következő segmentehez
+          replaySegments: [],      // replay payload
+          lastProgressUpdate: 0
+        };
+
+        /* -------------------- DOM elemek -------------------- */
+        const baseVideo = document.getElementById('baseVideo');
+        const overlayVideo = document.getElementById('overlayVideo');
+        const bgAudio = document.getElementById('bgAudio');
+        const playButton = document.getElementById('playButton');
+        const hamb = document.getElementById('hamb');
+        const menu = document.getElementById('menu');
+        const sceneItems = Array.from(document.querySelectorAll('.sceneItem'));
+        const cornerLabel = document.getElementById('cornerLabel');
+        const progressBar = document.getElementById('progressBar');
+        const linkBox = document.getElementById('linkBox');
+        const generatedLink = document.getElementById('generatedLink');
+        const copyBtn = document.getElementById('copyBtn');
+        
+
+        /* -------------------- Segédfüggvények -------------------- */
+        const safePlay = async (media, isMuted) => {
+          // próbáljunk meg játszani, iOS-hez explicit user click szükséges
+          try {
+            media.muted = isMuted;
+            await media.play();
+          } catch (e) {
+            // nem sikerült autoplay (iOS / autoplay policy) — kezeljük a UX-ben
+            // Egyszerűen elnyeljük a hibát; lejátszás kézzel indítható ismét
+          }
+        };
+
+        const showEl = (el, visible=true) => { el.style.display = visible ? 'block' : 'none'; };
+        const toggleClass = (el, cls, on) => { if (on) el.classList.add(cls); else el.classList.remove(cls); };
+
+        const encodePayload = (payload) => {
+          const s = JSON.stringify(payload);
+          return btoa(unescape(encodeURIComponent(s)));
+        };
+        const decodePayload = (b64) => {
+          try { return JSON.parse(decodeURIComponent(escape(atob(b64)))); } catch (e) { return null; }
+        };
+
+        const updateProgressBar = () => {
+          if (!isFinite(baseVideo.duration) || baseVideo.duration <= 0) return;
+          const perc = (baseVideo.currentTime / baseVideo.duration) * 100;
+          progressBar.style.width = perc + '%';
+        };
+
+        const showCornerLabel = (text) => {
+          if (text) {
+            cornerLabel.textContent = text;
+            cornerLabel.classList.add('show');
+          } else {
+            cornerLabel.classList.remove('show');
+          }
+        };
+
+        /* -------------------- Lejátszás indítása (felhasználói kattintás) ------------- */
+        const startRecordingPlayback = async () => {
+          // User-interaction: erre hivatkozva próbáljuk elindítani a két médiaelemet
+          playButton.style.display = 'none';
+          // próbáljuk egyszerre elindítani (safePlay elnyeli a hibákat)
+          await Promise.all([safePlay(baseVideo, true), safePlay(bgAudio, false)]);
+          state.recording = true;
+          state.recordedScenes = [];
+          state.playedScenes = new Set();
+          setTimeout(() => showCornerLabel('Góbé - Nádas'), 3500);
+          setTimeout(() => showCornerLabel(''), 6000);
+          hamb.style.display = 'none';
+          // progress frissítése timeupdate eseményen keresztül
+        };
+
+        /* -------------------- Ellenőrző logika (timeupdate alapú) ------------------ */
+        // AV szinkronizálás: ha a két lejátszó elcsúszik, igazítsuk a bgAudio-t a baseVideo-hoz
+        const handleTimeUpdate = () => {
+          // progress
+          updateProgressBar();
+
+          // menü megjelenítés logika
+          const cur = baseVideo.currentTime || 0;
+          const dur = baseVideo.duration || Infinity;
+          if (cur < HIDE_START || (isFinite(dur) && (dur - cur) <= HIDE_END)) {
+            hamb.style.display = 'none';
+          } else if (!state.overlayActive && state.recording) {
+            hamb.style.display = 'block';
+          }
+
+          // AV sync
+          const drift = Math.abs((baseVideo.currentTime || 0) - (bgAudio.currentTime || 0));
+          if (drift > SYNC_DRIFT_THRESHOLD) {
+            // korrigáljuk az audio-t a videóhoz (audio időpontot állítjuk)
+            try { bgAudio.currentTime = baseVideo.currentTime; } catch (e) { /* biztonsági catch */ }
+          }
+
+          // lejátszás vége
+          if (isFinite(dur) && cur >= dur - 0.05) {
+            endRecordingPlayback();
+          }
+
+          // replay: ha replay mode aktív, figyeljük a replaySegments-t és indítsuk a következőt, ha elérte az időt
+          if (state.replayMode && Array.isArray(state.replaySegments)) {
+            const idx = state.pendingReplayIndex;
+            if (idx < state.replaySegments.length) {
+              const seg = state.replaySegments[idx];
+              if ((bgAudio.currentTime || 0) >= (seg.time || 0)) {
+                // indítsuk a jelenetet
+                playOverlayScene(seg.src);
+                state.pendingReplayIndex++;
+              }
+            }
+          }
+        };
+
+        /* -------------------- Overlay lejátszása — ONCANPLAY kezelés ---------------- */
+        const playOverlayScene = (src, {once=false} = {}) => {
+          state.overlayActive = true;
+          // Tisztítás: ha volt korábbi src, töröljük az oncanplay/onended
+          overlayVideo.oncanplay = null;
+          overlayVideo.onended = null;
+
+          overlayVideo.src = src;
+          // Ne mutassuk addig, amíg canplay-el nem jelez a video (ez megszünteti a "villanás" effektust)
+          overlayVideo.oncanplay = () => {
+            overlayVideo.classList.add('show');
+            // ha van szükség rá, a safePlay elnyeli az esetleges autoplay hibát
+            safePlay(overlayVideo, true);
+          };
+
+          overlayVideo.ontimeupdate = () => {
+            const timeRemaining = overlayVideo.duration - overlayVideo.currentTime;
+            if (timeRemaining <= 1 && timeRemaining > 0 && !overlayVideo.classList.contains('fading')) {
+              overlayVideo.classList.add('fading');
+              overlayVideo.classList.remove('show');
+            }
+          };
+
+          overlayVideo.onended = () => {
+            overlayVideo.classList.remove('fading');
+            // remove src és load, hogy memóriát felszabadítsunk
+            overlayVideo.removeAttribute('src');
+            overlayVideo.load();
+            state.overlayActive = false;
+          };
+        };
+
+        /* -------------------- Vég (rögzítés befejeződése) ---------------------- */
+        const endRecordingPlayback = () => {
+          state.recording = false;
+          baseVideo.pause();
+          bgAudio.pause();
+          hamb.style.display = 'none';
+          showCornerLabel('');
+          // prepare link
+          const payload = { segments: state.recordedScenes, version: 1 };
+          const url = location.origin + location.pathname + '?story=' + encodePayload(payload);
+          generatedLink.value = url;
+          linkBox.style.display = 'flex';
+        };
+
+        /* -------------------- Scene click kezelése (recording közben) ----------- */
+        const handleSceneClick = (item) => {
+          const scene = item.dataset.scene;
+          const src = item.dataset.src;
+          if (!scene || !src) return;
+          if (state.playedScenes.has(scene) || state.replayMode) return;
+
+          // jelöljük meg, hogy játszott
+          state.playedScenes.add(scene);
+          item.classList.add('played');
+
+          // ha rögzítés alatt vagyunk, mentsük a jelenetet a bgAudio pillanatához (precíz idő alap)
+          if (state.recording) {
+            const t = Math.max(0, Math.floor(bgAudio.currentTime || 0));
+            state.recordedScenes.push({ scene, src, time: t });
+          }
+
+          // UI: zárjuk a menüt, rejtsük a hamburgert
+          menu.classList.remove('show');
+          hamb.setAttribute('aria-expanded', 'false');
+          hamb.style.display = 'none';
+
+          // mutassuk a címkét röviden és játsszuk le az overlayt
+          showCornerLabel(item.textContent || scene);
+          playOverlayScene(src);
+          // ha szükséges, egy timeout után eltüntetjük a címkét (vagy overlay onended is eltávolítja)
+          setTimeout(() => showCornerLabel(''), 3000);
+        };
+
+        /* -------------------- Replay logika (timeupdate alapú) ------------------ */
+        const scheduleReplay = (segments) => {
+          state.replayMode = true;
+          state.replaySegments = Array.isArray(segments) ? segments.slice() : [];
+          state.pendingReplayIndex = 0;
+          // UI: mutassuk a play button; amikor a felhasználó elindítja a lejátszást, a timeupdate handler fog indítani jeleneteket
+          playButton.style.display = 'block';
+          playButton.onclick = async () => {
+            // elindítjuk az alap videót és az audio-t — a timeupdate figyelni fogja az időpontokat
+            playButton.style.display = 'none';
+            await Promise.all([safePlay(baseVideo, true), safePlay(bgAudio, false)]);
+            // ne engedjük több kattintással duplikálni
+            playButton.onclick = null;
+          };
+        };
+
+        /* -------------------- Másolás vágólapra (Clipboard API + fallback) -------- */
+        const copyToClipboard = (text) => {
+          if (!text) return Promise.reject('Nincs szöveg');
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            return navigator.clipboard.writeText(text);
+          } else {
+            // fallback: textarea + execCommand
+            return new Promise((resolve, reject) => {
+              const ta = document.createElement('textarea');
+              ta.value = text;
+              document.body.appendChild(ta);
+              ta.select();
+              try {
+                const ok = document.execCommand('copy');
+                document.body.removeChild(ta);
+                ok ? resolve() : reject('execCommand failed');
+              } catch (e) {
+                document.body.removeChild(ta);
+                reject(e);
+              }
+            });
+          }
+        };
+
+        /* -------------------- Események regisztrálása ------------------ */
+
+        // play gomb: indítás (user-interaction)
+        playButton.addEventListener('click', async (e) => {
+          // Ha replay mode van beállítva, a scheduleReplay felülírja az onclick, külön kezeljük
+          if (state.replayMode) return;
+          await startRecordingPlayback();
+        });
+
+        // hamburger toggle (menu)
+        hamb.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = menu.classList.toggle('show');
+          hamb.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+          menu.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+        });
+
+        // zárja a menüt, ha kívülre kattintanak; biztosítjuk, hogy a menü saját kattintásai ne bubble-oljanak
+        menu.addEventListener('click', (e) => e.stopPropagation());
+        document.addEventListener('click', () => {
+          if (menu.classList.contains('show')) {
+            menu.classList.remove('show');
+            hamb.setAttribute('aria-expanded', 'false');
+            menu.setAttribute('aria-hidden', 'true');
+          }
+        });
+
+        // scene item click
+        sceneItems.forEach(item => {
+          item.addEventListener('click', () => handleSceneClick(item));
+        });
+
+        // progress / sync update - használjuk a baseVideo timeupdate-t (precíz)
+        baseVideo.addEventListener('timeupdate', handleTimeUpdate);
+        // safety fallback: ha a timeupdate nagyon ritkán jönne, frissítsünk periodikusan is
+        setInterval(() => {
+          const now = Date.now();
+          if (now - state.lastProgressUpdate > PROGRESS_UPDATE_MS) {
+            updateProgressBar();
+            state.lastProgressUpdate = now;
+          }
+        }, PROGRESS_UPDATE_MS);
+
+        // overlayVideo canplay & ended kezelése fent van a playOverlayScene-ben (oncanplay/onended beállítva)
+
+        // copy gomb
+        copyBtn.addEventListener('click', () => {
+          copyToClipboard(generatedLink.value)
+            .then(() => {
+              copyBtn.textContent = 'Másolva!';
+              setTimeout(() => copyBtn.textContent = 'Másol', 1700);
+            })
+            .catch(() => {
+              copyBtn.textContent = 'Hiba';
+              setTimeout(() => copyBtn.textContent = 'Másol', 1700);
+            });
+        });
+
+        /* -------------------- URL-ből történet betöltése (replay) ------------------ */
+        (function checkStoryParam() {
+          const p = new URLSearchParams(location.search);
+          const story = p.get('story');
+          if (!story) return;
+          const payload = decodePayload(story);
+          if (!payload || !Array.isArray(payload.segments)) return;
+          // Valid payload: beállítjuk a replay módot és előkészítjük a schedule-t
+          scheduleReplay(payload.segments);
+        })();
+
+        /* -------------------- Biztonsági UI viselkedések ------------------ */
+        // Ha a böngésző megakadályozta az autoplay-t (különösen iOS), a play gomb marad és a felhasználó egy kattintással elindítja a lejátszást
+        // Ha a felhasználó megpróbál közvetlenül url-lel betölteni story-t, a play gomb is elérhető a replay indításához
+      })();
+
+    </script>
+
+  </body>
+</html>
