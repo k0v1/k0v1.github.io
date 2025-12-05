@@ -100,7 +100,7 @@ Meg a landing még semmilyen formában nincsen kitalálva - erről te beszélté
     state.recording = true;
     state.recordedScenes = [];
     state.playedScenes = new Set();
-    showCornerLabel('Góbé - Nádas');
+    setTimeout(() => showCornerLabel(''), 3000);
     hamb.style.display = 'none';
     // progress frissítése timeupdate eseményen keresztül
   };
@@ -210,7 +210,7 @@ Meg a landing még semmilyen formában nincsen kitalálva - erről te beszélté
     showCornerLabel(item.textContent || scene);
     playOverlayScene(src);
     // ha szükséges, egy timeout után eltüntetjük a címkét (vagy overlay onended is eltávolítja)
-    setTimeout(() => showCornerLabel(''), 2600);
+    setTimeout(() => showCornerLabel(''), 3000);
   };
 
   /* -------------------- Replay logika (timeupdate alapú) ------------------ */
