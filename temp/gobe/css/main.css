@@ -151,6 +151,16 @@
   color: var(--black);
 }
 
+.gobe-section-light {
+  background-color: var(--white) !important;
+  color: var(--black) !important;
+}
+
+.gobe-section-dark {
+  background-color: var(--black) !important;
+  color: var(--white) !important;
+}
+
 .gobe-section-header {
   display: flex;
   flex-wrap: wrap;
